@@ -9,29 +9,35 @@
   <contributor>@MODULE_CONTRIBUTORS@</contributor>
   <acknowledgements><![CDATA[@MODULE_ACKNOWLEDGEMENTS@]]></acknowledgements>
   <parameters>
-    <double>
-      <name>sigma</name>
-      <longflag>sigma</longflag>
-      <flag>s</flag>
-      <label>Sigma</label>
-      <description><![CDATA[Sigma value in physical units (e.g., mm) of the Gaussian kernel]]></description>
-      <default>1.0</default>
-    </double>
     <label>IO</label>
-    <description><![CDATA[Input/output parameters]]></description>
+    <description>Input/output parameters</description>
     <image>
-      <name>inputVolume</name>
-      <label>Input Volume</label>
+      <name>lgefn</name>
+      <label>MRI image</label>
       <channel>input</channel>
       <index>0</index>
-      <description><![CDATA[Input volume]]></description>
+      <description>post-ablation LGE-MRI</description>
     </image>
-    <image>
-      <name>outputVolume</name>
-      <label>Output Volume</label>
-      <channel>output</channel>
+    <image type="label">
+      <name>lawallfn</name>
+      <label>LA wall mask</label>
+      <channel>input</channel>
       <index>1</index>
-      <description><![CDATA[Blurred Volume]]></description>
+      <description>LA wall (Myocardium) binary mask of the MRI</description>
+    </image>
+    <image type="label">
+      <name>laendofn</name>
+      <label>Blood Pool mask</label>
+      <channel>input</channel>
+      <index>2</index>
+      <description>Blood Pool (Endocardium) binary mask of the MRI</description>
+    </image>
+    <image type="label">
+      <name>outputfn</name>
+      <label>Result</label>
+      <channel>output</channel>
+      <index>3</index>
+      <description>Mask of post-ablation scar in the LA Wall.</description>
     </image>
   </parameters>
 </executable>

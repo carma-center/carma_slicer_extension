@@ -1,112 +1,271 @@
-#include "itkImageFileWriter.h"
+/**
+ * CarmaAutomaticLeftAtrialScar - automatic scar algorithm.
+ * For details see paper: Perry, D. et al. "Automatic classification of scar tissue...".
+ *                        Proceedings of SPIE Medical Imaging: Computer Aided Diagnosis. Feb 2012.
+ */
 
-#include "itkSmoothingRecursiveGaussianImageFilter.h"
+//std
+#include <string>
 
-#include "itkPluginUtilities.h"
-
+// auto-generated
 #include "CarmaAutomaticLeftAtrialScarCLP.h"
 
-// Use an anonymous namespace to keep class types and function names
-// from colliding when module is used as shared object module.  Every
-// thing should be in an anonymous namespace except for the module
-// entry point, e.g. main()
-//
-namespace
+// itk
+#include <itkImage.h>
+#include <itkExceptionObject.h>
+#include <itkImageFileReader.h>
+#include <itkImageFileWriter.h>
+#include <itkImageRegionIterator.h>
+#include <itkImageRegionConstIterator.h>
+
+#include <itkScalarImageKmeansImageFilter.h>
+
+struct Cluster
+{
+  int count;
+  double mean;
+  Cluster(int count_=0, double mean_=0.f)
+  :count(count_),
+  mean(mean_)
+  {}
+};
+
+int main(int argc, char** argv)
 {
 
-template <class T>
-int DoIt( int argc, char * argv[], T )
-{
-  PARSE_ARGS;
+  PARSE_ARGS; 
 
-  typedef    T InputPixelType;
-  typedef    T OutputPixelType;
+  const int K = 4; 
 
-  typedef itk::Image<InputPixelType,  3> InputImageType;
-  typedef itk::Image<OutputPixelType, 3> OutputImageType;
+  // setup ITK types...
+  typedef float  PixelType;
+  typedef itk::Image< PixelType,  3 >   ImageType;
+  typedef itk::ImageFileReader< ImageType  >  ReaderType;
 
-  typedef itk::ImageFileReader<InputImageType>  ReaderType;
-  typedef itk::ImageFileWriter<OutputImageType> WriterType;
-
-  typedef itk::SmoothingRecursiveGaussianImageFilter<
-    InputImageType, OutputImageType>  FilterType;
-
-  typename ReaderType::Pointer reader = ReaderType::New();
-
-  reader->SetFileName( inputVolume.c_str() );
-
-  typename FilterType::Pointer filter = FilterType::New();
-  filter->SetInput( reader->GetOutput() );
-  filter->SetSigma( sigma );
-
-  typename WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName( outputVolume.c_str() );
-  writer->SetInput( filter->GetOutput() );
-  writer->SetUseCompression(1);
-  writer->Update();
-
-  return EXIT_SUCCESS;
-}
-
-} // end of anonymous namespace
-
-int main( int argc, char * argv[] )
-{
-  PARSE_ARGS;
-
-  itk::ImageIOBase::IOPixelType     pixelType;
-  itk::ImageIOBase::IOComponentType componentType;
-
+  typedef unsigned char MaskPixelType;
+  typedef itk::Image< MaskPixelType,  3 >   MaskImageType;
+  typedef itk::ImageFileReader< MaskImageType  >  MaskReaderType;
+ 
+  // read in the nrrds...
+  ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName( lgefn );
+  ImageType::Pointer lge = reader->GetOutput();
   try
-    {
-    itk::GetImageType(inputVolume, pixelType, componentType);
+  {
+    reader->Update();
+  }
+  catch(itk::ExceptionObject e)
+  {
+    std::cerr << "Error reading file " << lgefn << ": " << e << std::endl;
+    exit(1);
+  }
+  ImageType::SizeType lgesize = lge->GetLargestPossibleRegion().GetSize();
 
-    // This filter handles all types on input, but only produces
-    // signed types
-    switch( componentType )
+  MaskReaderType::Pointer maskreader = MaskReaderType::New();
+  maskreader->SetFileName( lawallfn );
+  MaskImageType::Pointer lawall = maskreader->GetOutput();
+  try
+  {
+    maskreader->Update();
+  }
+  catch(itk::ExceptionObject e)
+  {
+    std::cerr << "Error reading file " << lawallfn << ": " << e << std::endl;
+    exit(1);
+  }
+  MaskImageType::SizeType lawallsize = lawall->GetLargestPossibleRegion().GetSize();
+
+  if( lawallsize != lgesize )
+  {
+    std::cerr << "Error: " << lgefn << " " << lgesize << " and " << lawallfn  << " " << lawallsize << " must have the same dimensions." << std::endl;
+    exit(1);
+  }
+
+  maskreader = MaskReaderType::New();
+  maskreader->SetFileName( laendofn );
+  MaskImageType::Pointer laendo = maskreader->GetOutput();
+  try
+  {
+    maskreader->Update();
+  }
+  catch(itk::ExceptionObject e)
+  {
+    std::cerr << "Error reading file " << laendofn << ": " << e << std::endl;
+    exit(1);
+  }
+  MaskImageType::SizeType laendosize = laendo->GetLargestPossibleRegion().GetSize();
+
+  if( lawallsize != laendosize )
+  {
+    std::cerr << "Error: " << laendofn << " " << laendosize << " and " << lawallfn  << " " << lawallsize << " must have the same dimensions." << std::endl;
+    exit(1);
+  }
+
+  typedef itk::ImageRegionConstIterator< MaskImageType > ConstMaskRegionIterator;
+  ConstMaskRegionIterator wallit( lawall, lawall->GetLargestPossibleRegion() );
+  ConstMaskRegionIterator endoit( laendo, laendo->GetLargestPossibleRegion() );
+
+  // calculate mean and standard deviation for statistical normalization:
+  double mean = 0.f;
+  double stdev = 0.f;
+  int count = 0;
+
+  for( wallit.GoToBegin(),endoit.GoToBegin(); !wallit.IsAtEnd(); ++wallit,++endoit )
+  {
+    if( wallit.Get() > 0 || endoit.Get() > 0) 
+    {
+      float p = lge->GetPixel(wallit.GetIndex());
+      mean += p;
+      ++count;
+    }
+  }
+  mean /= count;
+
+  for( wallit.GoToBegin(),endoit.GoToBegin(); !wallit.IsAtEnd(); ++wallit,++endoit )
+  {
+    if( wallit.Get() > 0 || endoit.Get() > 0) 
+    {
+      float p = lge->GetPixel(wallit.GetIndex());
+      stdev += (p-mean)*(p-mean);
+    }
+  }
+  stdev /= (count-1);
+  stdev = std::sqrt( stdev );
+
+  // we need to pull out the data in the wall+endo mask so that k-means only works on it
+  // and not the 0 data outside the mask.. for speed and to match previous work.
+  typedef itk::Image<float,1> ListType;
+  typedef itk::ImageRegionIterator< ListType > ListIterator;
+  ListType::Pointer epidata = ListType::New(); 
+  ListType::Pointer wallmasklist = ListType::New(); 
+  ListType::SizeType size;
+  size.Fill(count);
+  ListType::RegionType listregion(size);
+
+  epidata->SetRegions( listregion ); 
+  epidata->Allocate();
+  ListIterator epidatait( epidata, epidata->GetLargestPossibleRegion() );
+
+  wallmasklist->SetRegions( listregion ); 
+  wallmasklist->Allocate();
+
+  float min = 10000.f;
+  float max = 0.f;
+  for( wallit.GoToBegin(),endoit.GoToBegin(),epidatait.GoToBegin(); !wallit.IsAtEnd(); ++wallit,++endoit )
+  {
+    if( wallit.Get() > 0 || endoit.Get() > 0) 
+    {
+      float p = lge->GetPixel(wallit.GetIndex());
+      p = (p-mean)/stdev; // statistically normalize the mri values:
+      epidata->SetPixel(epidatait.GetIndex(), p );
+      wallmasklist->SetPixel(epidatait.GetIndex(), wallit.Get());
+
+      if( p > max ) max = p;
+      if( p < min ) min = p;
+      ++epidatait;
+    }
+  }
+
+  // apply the itk k-means filter
+  typedef itk::ScalarImageKmeansImageFilter< ListType, ListType > KmeansFilter;
+  KmeansFilter::Pointer kmeansfilter = KmeansFilter::New();
+  kmeansfilter->SetInput( epidata );
+  // TODO: initialize randomly and run multiple times, then take result with best compactness like opencv.
+  // see http://opencv.willowgarage.com/documentation/cpp/clustering_and_search_in_multi-dimensional_spaces.html
+  // For now, initializing with evenly spaced values...
+  float range = max - min;
+  float subrange = range / 4; // sub1:[min,min+subrange), sub2:[min+subrange,min+2*subrange), ...
+  for(int k=0; k<K; ++k)
+  {
+    kmeansfilter->AddClassWithInitialMean(min+k*subrange+(subrange/2)); // middle of each subrange, as defined above.
+  }
+  try
+  {
+    kmeansfilter->Update();
+  }
+  catch(itk::ExceptionObject e)
+  {
+    std::cerr << "Error running kmeans : " << e << std::endl;
+    exit(1);
+  }
+  ListType::Pointer label = kmeansfilter->GetOutput();
+ 
+  // analyze the labels, figure out which has the highest mean intensity:
+  typedef std::map<int, Cluster> ClusterMap;
+  ClusterMap clusterMap;
+  int wallCount = 0;
+  for( epidatait.GoToBegin(); !epidatait.IsAtEnd(); ++epidatait )
+  {
+    if( wallmasklist->GetPixel(epidatait.GetIndex()) > 0 )
+    {
+      ++wallCount;
+      int l = static_cast<int>( label->GetPixel(epidatait.GetIndex()) );
+      float p = epidata->GetPixel(epidatait.GetIndex());
+      ClusterMap::iterator e = clusterMap.find(l);
+      if( e == clusterMap.end() )
       {
-      case itk::ImageIOBase::UCHAR:
-        return DoIt( argc, argv, static_cast<unsigned char>(0) );
-        break;
-      case itk::ImageIOBase::CHAR:
-        return DoIt( argc, argv, static_cast<char>(0) );
-        break;
-      case itk::ImageIOBase::USHORT:
-        return DoIt( argc, argv, static_cast<unsigned short>(0) );
-        break;
-      case itk::ImageIOBase::SHORT:
-        return DoIt( argc, argv, static_cast<short>(0) );
-        break;
-      case itk::ImageIOBase::UINT:
-        return DoIt( argc, argv, static_cast<unsigned int>(0) );
-        break;
-      case itk::ImageIOBase::INT:
-        return DoIt( argc, argv, static_cast<int>(0) );
-        break;
-      case itk::ImageIOBase::ULONG:
-        return DoIt( argc, argv, static_cast<unsigned long>(0) );
-        break;
-      case itk::ImageIOBase::LONG:
-        return DoIt( argc, argv, static_cast<long>(0) );
-        break;
-      case itk::ImageIOBase::FLOAT:
-        return DoIt( argc, argv, static_cast<float>(0) );
-        break;
-      case itk::ImageIOBase::DOUBLE:
-        return DoIt( argc, argv, static_cast<double>(0) );
-        break;
-      case itk::ImageIOBase::UNKNOWNCOMPONENTTYPE:
-      default:
-        std::cout << "unknown component type" << std::endl;
-        break;
+        clusterMap[ l ].mean = p;
+        clusterMap[ l ].count = 1;
+      }
+      else
+      {
+        clusterMap[ l ].mean += p;
+        clusterMap[ l ].count += 1;
       }
     }
+  }
 
-  catch( itk::ExceptionObject & excep )
+  double maxVal = 0.f;
+  int maxL = -1;
+  for( ClusterMap::iterator e = clusterMap.begin(); e != clusterMap.end(); ++e )
+  {
+    (e->second).mean /= (e->second).count;
+    if( (e->second).mean > maxVal )
     {
-    std::cerr << argv[0] << ": exception caught !" << std::endl;
-    std::cerr << excep << std::endl;
-    return EXIT_FAILURE;
+      maxVal =  (e->second).mean;
+      maxL = (e->first);
     }
-  return EXIT_SUCCESS;
+  }
+
+  // send some results to std::cout:
+  //std::cerr << "scar percentage: ";
+  //std::cout << clusterMap[maxL].count / static_cast<float>(wallCount);
+  //std::cerr << std::endl;
+
+  // store the results in a nrrd: 
+  MaskImageType::Pointer scarimage = MaskImageType::New(); 
+  scarimage->SetRegions( lawall->GetLargestPossibleRegion() ); 
+  scarimage->Allocate();
+  scarimage->SetOrigin( lawall->GetOrigin() );
+  scarimage->SetSpacing( lawall->GetSpacing() );
+
+  for( wallit.GoToBegin(),endoit.GoToBegin(),epidatait.GoToBegin(); !wallit.IsAtEnd(); ++wallit,++endoit )
+  {
+    if( wallit.Get() > 0 && label->GetPixel(epidatait.GetIndex()) == maxL )
+    {
+      scarimage->SetPixel( wallit.GetIndex(), 1 );
+    }
+    else
+    {
+      scarimage->SetPixel( wallit.GetIndex(), 0 );
+    }
+    if( wallit.Get() > 0 || endoit.Get() > 0 ) ++epidatait;
+  }
+
+  typedef itk::ImageFileWriter< MaskImageType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetInput( scarimage );
+  writer->SetFileName( outputfn );
+  writer->UseCompressionOn();
+
+  try
+  {
+    writer->Update();
+  }
+  catch(itk::ExceptionObject e)
+  {
+    std::cerr << "Error writing file " << outputfn << ": " << e << std::endl;
+  }
+  
+  return 0;
 }
