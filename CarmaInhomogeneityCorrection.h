@@ -263,18 +263,11 @@
     m_MaskInterpolator = LinearInterpolatorType::New();
     m_MaskInterpolator->SetInputImage(input_endo);
 
-   
-    for (int i=0; i < InputImageDimension; i++) {
-      std::cout << "origin[" << i << "] = " << origin[i] << std::endl;
-      float distance = spacing[i] * size[i];
-      std::cout << "ranging " << distance << std::endl;
-    }
-
     SampleImage(&progress);
     progress.CompletedPixel();
 
     int num_points = m_Samples.size();
-    std::cout << "Found " << m_Samples.size() << " points\n";
+    //std::cout << "Found " << m_Samples.size() << " points\n";
 
     if (num_points < 1) {
       std::cerr << "InhomogeneityCorrectionFilter: Error: did not find any sampled points!\n";
