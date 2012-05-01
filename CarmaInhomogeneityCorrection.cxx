@@ -35,30 +35,30 @@ int DoIt( int argc, char * argv[], T )
 
 
   // read data
-  ReaderType::Pointer data_reader = ReaderType::New();
+  typename ReaderType::Pointer data_reader = ReaderType::New();
   data_reader->SetFileName(dataFileName);
-  ImageType::Pointer data_image = data_reader->GetOutput();
+  typename ImageType::Pointer data_image = data_reader->GetOutput();
   data_reader->Update();
 
   // read endo
-  ReaderType::Pointer endo_reader = ReaderType::New();
+  typename ReaderType::Pointer endo_reader = ReaderType::New();
   endo_reader->SetFileName(endoFileName);
-  ImageType::Pointer endo_image = endo_reader->GetOutput();
+  typename ImageType::Pointer endo_image = endo_reader->GetOutput();
   endo_reader->Update();
 
   // read roi
-  ReaderType::Pointer roi_reader = ReaderType::New();
+  typename ReaderType::Pointer roi_reader = ReaderType::New();
   roi_reader->SetFileName(roiFileName);
-  ImageType::Pointer roi_image = roi_reader->GetOutput();
+  typename ImageType::Pointer roi_image = roi_reader->GetOutput();
   roi_reader->Update();
 
-  CorrectionFilterType::Pointer correction_filter = CorrectionFilterType::New();
+  typename CorrectionFilterType::Pointer correction_filter = CorrectionFilterType::New();
   correction_filter->SetInput(0, data_image);
   correction_filter->SetInput(1, endo_image);
   correction_filter->SetInput(2, roi_image);
 
   //WriterType::Pointer writer;
-  WriterType::Pointer writer = WriterType::New();
+	typename WriterType::Pointer writer = WriterType::New();
   writer->SetFileName(outputFileName);
   writer->SetInput(correction_filter->GetOutput());
   writer->UseCompressionOn();
