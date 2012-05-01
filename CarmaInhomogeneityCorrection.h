@@ -159,9 +159,6 @@
  }; // end class InhomogeneityCorrectionFilter
 
 
-
- 
-
   // DEFINITIONS:
 
   template <class TInputImage, class TOutputImage>
@@ -172,10 +169,6 @@
   {
     // constructor
   }
-
-
-
-
 
   template <class TInputImage, class TOutputImage>
   vnl_matrix<double> InhomogeneityCorrectionFilter<TInputImage, TOutputImage>
@@ -250,7 +243,6 @@
     typename InputImageType::ConstPointer input_roi = this->GetInput(2);
 
 
-
     if (InputImageDimension != 3) {
       itkExceptionMacro ("InhomogeneityCorrectionFilter only works in 3D");
     }
@@ -295,7 +287,6 @@
 
     vnl_matrix<double> pts(num_points, numCoeffs, 0.0);
 
-
     vnl_matrix<double> x_array(num_points, 1, 0.0);
     vnl_matrix<double> y_array(num_points, 1, 0.0);
     vnl_matrix<double> z_array(num_points, 1, 0.0);
@@ -314,14 +305,10 @@
     double scale_z = 1.0 / z_array.absolute_value_max();
     double scale_a = 1.0 / a_array.absolute_value_max();
 
-
     vnl_matrix<double> xs = x_array * scale_x;
     vnl_matrix<double> ys = y_array * scale_y;
     vnl_matrix<double> zs = z_array * scale_z;
     vnl_matrix<double> as = a_array * scale_a;
-
-
-
 
     int column = 0;
     for (double xpower = 0; xpower <= m_PolynomialOrder; xpower++) {
@@ -409,8 +396,6 @@
       }
     }
 
-
-
     vnl_matrix<double> roi_x(roi_points.size(), 1, 0.0);
     vnl_matrix<double> roi_y(roi_points.size(), 1, 0.0);
     vnl_matrix<double> roi_z(roi_points.size(), 1, 0.0);
@@ -477,18 +462,13 @@ void InhomogeneityCorrectionFilter<TInputImage, TOutputImage>
 
 
   //float margin = m_SampleSpacing * 2;
-  float margin = 0;
 
-  float start_x = origin[0] + margin;
-  float start_y = origin[1] + margin;
-  float start_z = origin[2] + margin;
-  float end_x = origin[0] + (spacing[0] * size[0]) - margin;
-  float end_y = origin[1] + (spacing[1] * size[1]) - margin;
-  float end_z = origin[2] + (spacing[2] * size[2]) - margin;
-
-  //std::cerr << "start_x = " << start_x << ", end_x = " << end_x << "\n";
-  //std::cerr << "start_y = " << start_y << ", end_y = " << end_y << "\n";
-  //std::cerr << "start_z = " << start_z << ", end_z = " << end_z << "\n";
+  float start_x = origin[0];
+  float start_y = origin[1];
+  float start_z = origin[2];
+  float end_x = origin[0] + (spacing[0] * size[0]);
+  float end_y = origin[1] + (spacing[1] * size[1]);
+  float end_z = origin[2] + (spacing[2] * size[2]);
 
   float possible_samples = (end_x - start_x) / m_SampleSpacing;
   possible_samples *= (end_y - start_y) / m_SampleSpacing;
