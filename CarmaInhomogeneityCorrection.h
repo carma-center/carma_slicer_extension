@@ -45,12 +45,12 @@
     
     virtual ~ProgressObserver() {}
 
-    virtual void Execute( itk::Object *caller, const itk::EventObject & event )
+    virtual void Execute( itk::Object* itkNotUsed(caller), const itk::EventObject& itkNotUsed(event) )
     {
       reporter.CompletedPixel();
     }
 
-    virtual void Execute(const itk::Object *caller, const itk::EventObject & event )
+    virtual void Execute(const itk::Object* itkNotUsed(caller), const itk::EventObject & itkNotUsed(event) )
     {
       reporter.CompletedPixel();
     }
@@ -196,17 +196,9 @@
    end
 */
 
-    int sizexR = x.rows();
-    int sizexC = x.cols();
     int sizeyR = y.rows();
-    int sizeyC = y.cols();
-    int sizezR = z.rows();
-    int sizezC = z.cols();
     int numVals = sizeyR;
 
-    int size_coeffs = coeffs.size();
-    double order = 0.5 * (std::sqrt((double)(8*size_coeffs+1)) - 5);
-  
     vnl_matrix<double> zbar(numVals, 1, 0.0);
     int column = 0;
     for (double xpower = 0; xpower <= m_PolynomialOrder; xpower++) {
@@ -394,7 +386,7 @@
     vnl_matrix<double> roi_z(roi_points.size(), 1, 0.0);
     vnl_matrix<double> roi_a(roi_points.size(), 1, 0.0);
 
-    for (int i=0; i < roi_points.size(); i++) {
+    for (unsigned int i=0; i < roi_points.size(); i++) {
       PointType p = roi_points[i].first;
       roi_x(i,0) = p[0];
       roi_y(i,0) = p[1];
