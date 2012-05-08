@@ -9,6 +9,21 @@ set(EXTENSION_CONTRIBUTORS "Julien Jomier (Kitware), Stephen Aylward (Kitware), 
 set(EXTENSION_DESCRIPTION "This is an example of CLI extension built as an extension")
 set(EXTENSION_SCREENSHOTURLS "http://wiki.slicer.org/slicerWiki/images/a/ab/Slicer-r19441-inhomogeneity_correction-screenshot.png http://wiki.slicer.org/slicerWiki/images/1/1e/Slicer-r19441-inhomogeneity_correction-screenshot-2.png")
 
+#-----------------------------------------------------------------------------
+if(NOT Slicer_SOURCE_DIR)
+  find_package(Slicer REQUIRED)
+  include(${Slicer_USE_FILE})
+endif()
+
+set(cli_module_target_libraries
+  ${ITK_LIBRARIES}
+)
+
+
+
+#-----------------------------------------------------------------------------
+# Inhomogeneity Correction Module
+#-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
 set(MODULE_NAME "Inhomogeneity Correction") # Do not use 'project()'
@@ -27,12 +42,9 @@ set(MODULE_MAJOR_VERSION 0)
 set(MODULE_MINOR_VERSION 1)
 set(MODULE_PATCH_VERSION 0)
 
-#-----------------------------------------------------------------------------
-if(NOT Slicer_SOURCE_DIR)
-  find_package(Slicer REQUIRED)
-  include(${Slicer_USE_FILE})
-endif()
 
+
+#-----------------------------------------------------------------------------
 # Configure XML description
 configure_file(
   ${MODULE_FILE_NAME}.xml.in
@@ -40,19 +52,6 @@ configure_file(
   @ONLY
   )
 
-#-----------------------------------------------------------------------------
-#add_subdirectory(Logic)
-
-#-----------------------------------------------------------------------------
-set(cli_module_include_directories
-  )
-
-set(cli_module_SRCS
-  )
-
-set(cli_module_target_libraries
-  ${ITK_LIBRARIES}
-  )
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildCLI(
@@ -64,16 +63,11 @@ slicerMacroBuildCLI(
   #EXECUTABLE_ONLY
   )
 
-#-----------------------------------------------------------------------------
-#if(BUILD_TESTING)
-#  add_subdirectory(Testing)
-#endif()
 
 #-----------------------------------------------------------------------------
-#if(NOT Slicer_SOURCE_DIR)
-#  include(${Slicer_EXTENSION_CPACK})
-#endif()
-#cmake_minimum_required(VERSION 2.8.7)
+# Automatic Left Atrial Scar Module
+#-----------------------------------------------------------------------------
+
 
 #-----------------------------------------------------------------------------
 set(MODULE_NAME "Automatic Left Atrial Scar") # Do not use 'project()'
@@ -93,11 +87,6 @@ set(MODULE_MINOR_VERSION 1)
 set(MODULE_PATCH_VERSION 0)
 
 #-----------------------------------------------------------------------------
-if(NOT Slicer_SOURCE_DIR)
-  find_package(Slicer REQUIRED)
-  include(${Slicer_USE_FILE})
-endif()
-
 # Configure XML description
 configure_file(
   ${MODULE_FILE_NAME}.xml.in
@@ -105,19 +94,6 @@ configure_file(
   @ONLY
   )
 
-#-----------------------------------------------------------------------------
-#add_subdirectory(Logic)
-
-#-----------------------------------------------------------------------------
-set(cli_module_include_directories
-  )
-
-set(cli_module_SRCS
-  )
-
-set(cli_module_target_libraries
-  ${ITK_LIBRARIES}
-  )
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildCLI(
