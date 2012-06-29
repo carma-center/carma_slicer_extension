@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.7)
 
+#-----------------------------------------------------------------------------
 set(EXTENSION_NAME carma)
 set(EXTENSION_HOMEPAGE "http://www.carmacenter.org")
 set(EXTENSION_CATEGORY "CARMA")
@@ -15,28 +16,23 @@ if(NOT Slicer_SOURCE_DIR)
   include(${Slicer_USE_FILE})
 endif()
 
-set(cli_module_target_libraries
+
+set(MODULE_TARGET_LIBRARIES
   ${ITK_LIBRARIES}
-)
-
-
+  )
 
 #-----------------------------------------------------------------------------
 # Inhomogeneity Correction Module
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "Inhomogeneity Correction") # Do not use 'project()'
-set(MODULE_FILE_NAME "CarmaInhomogeneityCorrection")
+set(MODULE_NAME "CarmaInhomogeneityCorrection")
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildCLI(
-  NAME ${MODULE_FILE_NAME}
+  NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NAMICLogo.h
-  TARGET_LIBRARIES ${cli_module_target_libraries}
-  INCLUDE_DIRECTORIES ${cli_module_include_directories}
-  ADDITIONAL_SRCS ${cli_module_SRCS}
-  #EXECUTABLE_ONLY
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
   )
 
 
@@ -44,19 +40,14 @@ slicerMacroBuildCLI(
 # Automatic Left Atrial Scar Module
 #-----------------------------------------------------------------------------
 
-
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "Automatic Left Atrial Scar") # Do not use 'project()'
-set(MODULE_FILE_NAME "CarmaAutomaticLeftAtrialScar")
+set(MODULE_NAME CarmaAutomaticLeftAtrialScar)
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildCLI(
-  NAME ${MODULE_FILE_NAME}
+  NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NAMICLogo.h
-  TARGET_LIBRARIES ${cli_module_target_libraries}
-  INCLUDE_DIRECTORIES ${cli_module_include_directories}
-  ADDITIONAL_SRCS ${cli_module_SRCS}
-  #EXECUTABLE_ONLY
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
   )
 
 #-----------------------------------------------------------------------------
@@ -68,3 +59,4 @@ endif()
 if(NOT Slicer_SOURCE_DIR)
   include(${Slicer_EXTENSION_CPACK})
 endif()
+
