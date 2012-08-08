@@ -7,19 +7,19 @@ from __main__ import vtk, qt, ctk, slicer
 class CarmaRegistration:
   def __init__(self, parent):
     parent.title = "CarmaRegistration" # TODO make this more human readable by adding spaces
-    parent.categories = ["Examples"]
+    parent.categories = ["CARMA"]
     parent.dependencies = []
-    parent.contributors = ["Alan Morris (CARMA)"] # replace with "Firstname Lastname (Org)"
+    parent.contributors = ["Alan Morris (CARMA), Greg Gardner (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"] # replace with "Firstname Lastname (Org)"
     parent.helpText = """
-    This is an example of scripted loadable module bundled in an extension.
+    This module provides registration presets for a given set of cases.
     """
     parent.acknowledgementText = """
-    This file was originally developed by Jean-Christophe Fillion-Robin, Kitware Inc. and Steve Pieper, Isomics, Inc.  and was partially funded by NIH grant 3P41RR013218-12S1.
+    This file was supported by...
 """ # replace with organization, grant and thanks.
     self.parent = parent
 
 #
-# qCarmaRegistrationWidget
+# CarmaRegistrationWidget
 #
 
 class CarmaRegistrationWidget:
