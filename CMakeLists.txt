@@ -35,6 +35,23 @@ slicerMacroBuildCLI(
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
   )
 
+#-----------------------------------------------------------------------------
+# Registration Module
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "CarmaRegistration")
+
+#-----------------------------------------------------------------------------
+ctkMacroCompilePythonScript(
+  TARGET_NAME CarmaRegistration
+  SCRIPTS "CarmaRegistration.py"
+  RESOURCES ""
+  DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
+  INSTALL_DIR ${Slicer_INSTALL_QTSCRIPTEDMODULES_LIB_DIR}
+  NO_INSTALL_SUBDIR
+  )
+
 
 #-----------------------------------------------------------------------------
 # Automatic Left Atrial Scar Module
