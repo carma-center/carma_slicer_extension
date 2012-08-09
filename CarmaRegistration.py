@@ -123,13 +123,8 @@ class CarmaRegistrationWidget:
     self.registerButton = registerButton
 
   def onRegisterButtonClicked(self):
-    print "ok, about to perform registration"
-    print "index = " + str(self.presetComboBox.currentIndex)
+    print "Performing CARMA registration"
     print "method = " + self.presetComboBox.itemText(self.presetComboBox.currentIndex)
-    if self.cropCheckBox.checked:
-      print "cropped = true"
-    else:
-      print "cropped = false"
 
     fixedVolume = self.fixedSelector.currentNode()
     movingVolume = self.movingSelector.currentNode()
@@ -143,6 +138,16 @@ class CarmaRegistrationWidget:
     param['fixedImage'] = fixedVolume.GetID()
     param['movingImage'] = movingVolume.GetID()
     param['resampledImage'] = outputVolume.GetID()
+
+    param['initialization'] = "ImageCenters"
+
+    if self.cropCheckBox.checked:
+      param['registration'] = "PipelineAffine"
+      print "cropped = true"
+    else:
+      param['registration'] = "PipelineRigid"
+      print "cropped = false"
+
     slicer.cli.run( slicer.modules.expertautomatedregistration, None, param, wait_for_completion=True )
 
 
