@@ -6,7 +6,7 @@ from __main__ import vtk, qt, ctk, slicer
 
 class CarmaRegistration:
   def __init__(self, parent):
-    parent.title = "CarmaRegistration" # TODO make this more human readable by adding spaces
+    parent.title = "Carma Registration"
     parent.categories = ["CARMA"]
     parent.dependencies = []
     parent.contributors = ["Alan Morris (CARMA), Greg Gardner (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"] # replace with "Firstname Lastname (Org)"
@@ -124,7 +124,8 @@ class CarmaRegistrationWidget:
 
   def onRegisterButtonClicked(self):
     print "Performing CARMA registration"
-    print "method = " + self.presetComboBox.itemText(self.presetComboBox.currentIndex)
+    method = self.presetComboBox.itemText(self.presetComboBox.currentIndex)
+    print "method = " + method
 
     fixedVolume = self.fixedSelector.currentNode()
     movingVolume = self.movingSelector.currentNode()
@@ -140,6 +141,11 @@ class CarmaRegistrationWidget:
     param['resampledImage'] = outputVolume.GetID()
 
     param['initialization'] = "ImageCenters"
+
+    if method == 'LGE-MRI to LGE-MRI':
+      param['metric'] = "NormCorr"
+    else:
+      param['metric'] = "MattesMI"
 
     if self.cropCheckBox.checked:
       param['registration'] = "PipelineAffine"
