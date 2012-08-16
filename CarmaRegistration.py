@@ -11,7 +11,7 @@ class CarmaRegistration:
     parent.dependencies = []
     parent.contributors = ["Alan Morris (CARMA), Greg Gardner (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"] # replace with "Firstname Lastname (Org)"
     parent.helpText = """
-    This module provides registration presets for a given set of cases.
+    This module provides registration presets for a given set of cases related to the CARMA Afib project.<br><br>  Underneath, the Expert Automated Registration module is invoked with different sets of parameters tuned for the different registration cases.  <br><br>For more detailed information, see the online documentation at:<br><br><a href=http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleCardiacRegistration>http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleCardiacRegistration</a>
     """
     parent.acknowledgementText = """
     This file was supported by...
