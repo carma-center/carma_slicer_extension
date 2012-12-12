@@ -1,4 +1,3 @@
-
 #ifndef _PVAntrumCut_H
 #define _PVAntrumCut_H
 
@@ -104,6 +103,7 @@ namespace itk
         r[m_SliceIndex] = 0;
         return r;
       }
+
 
      /** PVAntrumCut needs a larger input requested region than
        * the output requested region.  As such, PVAntrumCut needs
