@@ -210,28 +210,15 @@ class CarmaRegistrationWidget:
     self.iterSpinBox.setMinimum(1)
     self.iterSpinBox.setMaximum(2000)
     self.iterSpinBox.setValue(0)
+    self.iterSpinBox.toolTip = "The maximum number of iterations to try before failing to converge."
     self.iterFrame.layout().addWidget(self.iterSpinBox)    
-    
-    # Sampling Ratio value
-    #self.sampFrame = qt.QFrame(collapsibleButton2)
-    #self.sampFrame.setLayout(qt.QHBoxLayout())
-    #formLayout2.addWidget(self.sampFrame)
-    #self.sampSelector = qt.QLabel("Enter the Sampling Ratio: ", self.sampFrame)
-    #self.sampFrame.layout().addWidget(self.sampSelector)
-    #self.sampSpinBox = qt.QDoubleSpinBox()
-    #self.sampSpinBox.setLayout(qt.QHBoxLayout())
-    #self.sampSpinBox.setMinimum(0)
-    #self.sampSpinBox.setMaximum(50)
-    #self.sampSpinBox.setDecimals(3)
-    #self.sampSpinBox.setValue(0)
-    #self.sampFrame.layout().addWidget(self.sampSpinBox)        
     
     # Sampling Ratio Slider
     self.frame = qt.QFrame(collapsibleButton2)
     self.frame.setLayout(qt.QHBoxLayout())
     formLayout2.addWidget(self.frame)
     self.sampSliderSelector = qt.QLabel("Sampling Ratio (Accuracy of Registration): ", self.frame)
-    #self.sampSliderSelector.tooltip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration"
+    self.sampSliderSelector.tooltip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration"
     self.frame.layout().addWidget(self.sampSliderSelector)
     self.sampSliderFrame = ctk.ctkSliderWidget()
     self.sampSliderFrame.minimum = 0

@@ -392,13 +392,6 @@ class CarmaRegistrationBRAINSFitWidget:
     param['initializeTransformMode'] = self.initOfRegnComboBox.itemText(self.initOfRegnComboBox.currentIndex)
     param['costMetric'] = self.metComboBox.itemText(self.metComboBox.currentIndex)
     param['numberOfThreads'] = 4
-
-    
-    #if self.histCheckBox.isChecked():
-    #  param['histogramMatch'] = True
-    #  print "Checked"
-    #  param['numberOfHistogramBins'] = self.histBinsSpinBox.value
-    #  param['numberOfMatchPoints'] = self.histPointsSpinBox.value
     
     slicer.cli.run( slicer.modules.brainsfit, None, param, wait_for_completion=True )
       
