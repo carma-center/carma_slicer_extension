@@ -63,7 +63,10 @@ int DoIt( int argc, char * argv[], T )
   filter->SetDimension( 2 );
   filter->SetFilter( dilate_filter );
   filter->SetInput( mask_image );
-  /*
+
+  /* 
+
+  // 3D dilation
 
   typedef itk::BinaryBallStructuringElement<
     ImageType::PixelType,3>                  StructuringElementType;
@@ -71,10 +74,7 @@ int DoIt( int argc, char * argv[], T )
   structuringElement.SetRadius(2);
   structuringElement.CreateStructuringElement();
 
-
   typedef itk::BinaryDilateImageFilter< ImageType, ImageType, StructuringElementType> BinaryDilateImageFilterType;
-
-
 
   BinaryDilateImageFilterType::Pointer dilate_filter = BinaryDilateImageFilterType::New();
   dilate_filter->SetDilateValue( 1 );

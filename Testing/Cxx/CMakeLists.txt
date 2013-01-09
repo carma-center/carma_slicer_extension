@@ -5,6 +5,10 @@
  set(INPUT ${CMAKE_CURRENT_SOURCE_DIR}/../../Data/Input)
  set(TEMP "${CMAKE_BINARY_DIR}/Testing/Temporary")
 
+
+ ##############################################################################
+ # CarmaAutomaticLeftAtrialScar
+ ##############################################################################
  set(CLP "CarmaAutomaticLeftAtrialScar")
 
  #-----------------------------------------------------------------------------
@@ -22,6 +26,9 @@
    )
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
+ ##############################################################################
+ # CarmaInhomogeneityCorrection
+ ##############################################################################
  set(CLP "CarmaInhomogeneityCorrection")
 
  #-----------------------------------------------------------------------------
@@ -36,5 +43,25 @@
    ${TEMP}/${CLP}Test.nrrd
    ModuleEntryPoint
    ${INPUT}/inhomogeneity-data.nrrd ${INPUT}/inhomogeneity-endo.nrrd ${INPUT}/inhomogeneity-roi.nrrd ${TEMP}/${CLP}Test.nrrd
+   )
+ set_property(TEST ${testname} PROPERTY LABELS ${CLP})
+
+ ##############################################################################
+ # CarmaAxialDilate
+ ##############################################################################
+ set(CLP "CarmaAxialDilate")
+
+ #-----------------------------------------------------------------------------
+ add_executable(${CLP}Test ${CLP}Test.cxx)
+ target_link_libraries(${CLP}Test ${CLP}Lib)
+ set_target_properties(${CLP}Test PROPERTIES LABELS ${CLP})
+
+ #-----------------------------------------------------------------------------
+ set(testname ${CLP}Test)
+ add_test(NAME ${testname} COMMAND ${Launcher_Command} $<TARGET_FILE:${CLP}Test>
+   --compare ${BASELINE}/${CLP}Test.nrrd
+   ${TEMP}/${CLP}Test.nrrd
+   ModuleEntryPoint
+   ${INPUT}/dilate-endo.nrrd ${TEMP}/${CLP}Test.nrrd
    )
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
