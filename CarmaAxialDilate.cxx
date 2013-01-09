@@ -43,7 +43,7 @@ int DoIt( int argc, char * argv[], T )
   
 
   typedef itk::BinaryBallStructuringElement<
-    ImageType::PixelType,2>                  StructuringElementType;
+    PixelType,2>                  StructuringElementType;
   StructuringElementType structuringElement;
   structuringElement.SetRadius(4);
   structuringElement.CreateStructuringElement();
@@ -53,12 +53,12 @@ int DoIt( int argc, char * argv[], T )
 
   typedef itk::SliceBySliceImageFilter< ImageType, ImageType > SliceBySliceFilterType;
 
-  BinaryDilateImageFilterType::Pointer dilate_filter = BinaryDilateImageFilterType::New();
+  typename BinaryDilateImageFilterType::Pointer dilate_filter = BinaryDilateImageFilterType::New();
 
   dilate_filter->SetKernel( structuringElement );
   dilate_filter->SetDilateValue( 1 );
 
-  SliceBySliceFilterType::Pointer filter = SliceBySliceFilterType::New();
+  typename SliceBySliceFilterType::Pointer filter = SliceBySliceFilterType::New();
 
   filter->SetDimension( 2 );
   filter->SetFilter( dilate_filter );
