@@ -1,0 +1,162 @@
+/*
+* IsolatedConnectedFilter.cpp
+*
+*
+* Created by Salma Bengali on 12/5/12.
+*
+*
+*/
+
+#if defined(_MSC_VER)
+#pragma warning ( disable : 4786 )
+#endif
+
+#ifdef __BORLANDC__
+#define ITK_LEAN_AND_MEAN
+#endif
+
+#include "itkIsolatedConnectedImageFilter.h"
+#include "IsolatedConnectedFilterCLP.h"
+#include "itkImage.h"
+#include "itkCastImageFilter.h"
+#include "itkCurvatureFlowImageFilter.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
+
+namespace
+{
+  typedef float InternalPixelType;
+  const unsigned int Dimension = 3;
+  typedef itk::Image< InternalPixelType, Dimension > InternalImageType;
+  
+  typedef InternalImageType::PointType ImagePointType;
+  typedef std::vector<ImagePointType> PointList;
+
+  static itk::Point<float, 3> convertStdVectorToITKPoint(const std::vector<float> & vec)
+  {
+    itk::Point<float, 3> p;
+
+    // convert RAS to LPS
+    p[0] = -vec[0];
+    p[1] = -vec[1];
+    p[2] = vec[2];
+    return p;
+  }
+}
+
+int main( int argc, char *argv[] )
+{
+  PARSE_ARGS;
+
+  if( argc < 9 )
+    {
+    std::cerr << "Missing Parameters " << std::endl;
+    std::cerr << "Usage: " << argv[0];
+    std::cerr << " inputImage outputImage seedX1 seedY1 seedZ1";
+    std::cerr << " upperThreshold seedX2 seedY2 seedZ2" << std::endl;
+    return 1;
+    }
+
+  typedef unsigned char OutputPixelType;
+  typedef itk::Image< OutputPixelType, Dimension > OutputImageType;
+  typedef itk::CastImageFilter< InternalImageType, OutputImageType > CastingFilterType;
+  
+  CastingFilterType::Pointer caster = CastingFilterType::New();
+  typedef itk::ImageFileReader< InternalImageType > ReaderType;
+  typedef itk::ImageFileWriter< OutputImageType > WriterType;
+
+  ReaderType::Pointer reader = ReaderType::New();
+  WriterType::Pointer writer = WriterType::New();
+
+  reader->SetFileName( inputImage );
+  writer->SetFileName( outputImage );
+  InternalImageType::Pointer inputImagePtr = InternalImageType::New();
+  inputImagePtr = reader->GetOutput();
+  typedef itk::CurvatureFlowImageFilter< InternalImageType, InternalImageType > CurvatureFlowImageFilterType;
+  CurvatureFlowImageFilterType::Pointer smoothing = CurvatureFlowImageFilterType::New();
+
+  typedef itk::IsolatedConnectedImageFilter<InternalImageType, InternalImageType> ConnectedFilterType;
+
+  ConnectedFilterType::Pointer isolatedConnected = ConnectedFilterType::New();
+  reader->Update();
+  smoothing->SetInput( reader->GetOutput() );
+  isolatedConnected->SetInput( smoothing->GetOutput() );
+  caster->SetInput( isolatedConnected->GetOutput() );
+  writer->SetInput( caster->GetOutput() );
+  smoothing->SetNumberOfIterations( 5 );
+  smoothing->SetTimeStep( 0.125 );
+  
+  PointList seeds1_list;
+  PointList seeds2_list;
+
+  typedef std::vector<InternalImageType::IndexType> IndexList;
+
+  isolatedConnected->FindUpperThresholdOn();
+  isolatedConnected->SetLower( lowerThreshold );
+  
+  IndexList indexList1;
+  IndexList indexList2;
+
+  if( seeds1.size() > 0 && seeds2.size() > 0 )
+  {
+    seeds1_list.resize( seeds1.size() );
+    seeds2_list.resize( seeds2.size() );
+
+    // Convert both points lists to ITK points and convert RAS -> LPS
+    std::transform( seeds1.begin(), seeds1.end(),
+                   seeds1_list.begin(), convertStdVectorToITKPoint );
+    std::cout << seeds1_list[0] << seeds1_list[1] << seeds1_list[2] << std::endl;
+
+    std::transform( seeds2.begin(), seeds2.end(),
+                   seeds2_list.begin(), convertStdVectorToITKPoint );
+    std::cout << seeds2_list[0] << seeds2_list[1] << seeds2_list[2] << std::endl;
+
+
+    indexList1.resize( seeds1.size() );
+    indexList2.resize( seeds2.size() );
+
+    bool isInside;
+
+    for( unsigned int i = 0; i<seeds1.size(); i++)
+    {
+      isInside = inputImagePtr->TransformPhysicalPointToIndex( seeds1_list[i], indexList1[i] );
+      std::cout << "isInside = " << isInside << std::endl;
+      std::cout << "index1 = " << indexList1[i] << std::endl;
+      isolatedConnected->SetSeed1( indexList1[i] );
+    }
+
+    for( unsigned int i = 0; i<seeds2.size(); i++)
+    {
+      isInside = inputImagePtr->TransformPhysicalPointToIndex( seeds2_list[i], indexList2[i] );
+      std::cout << "isInside = " << isInside << std::endl;
+      std::cout << "index2 = " << indexList2[i] << std::endl;
+      isolatedConnected->SetSeed2( indexList2[i] );
+    }  
+  }
+  else
+  {
+    std::cerr << "Must supply at least one seed for each region" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  isolatedConnected->SetReplaceValue( 255 );
+
+  if( inputImagePtr->GetBufferedRegion().IsInside( indexList1[0] ) )
+  {
+    try
+    {
+      writer->Update();
+    }
+    catch( itk::ExceptionObject & excep )
+    {
+      std::cerr << "Exception caught !" << std::endl;
+      std::cerr << excep << std::endl;
+    }
+  }
+  else
+  {
+    std::cout << "Index not within image boundaries" << std::endl;
+  }
+
+  return 0;
+}
