@@ -11,14 +11,14 @@
   <parameters>
     <label>Input Images</label>
     <description><![CDATA[Input and output parameters]]></description>
-    <image>
+    <image type="label">
       <name>endoLayer</name>
       <label>Endo Layer</label>
       <longflag>Endo_Layer</longflag>
       <channel>input</channel>
       <description><![CDATA[Segmentation of left atrium endocardial region]]></description>
     </image>
-    <image>
+    <image type="label">
       <name>wallLayer</name>
       <label>Wall Layer</label>
       <longflag>Wall_Layer</longflag>
@@ -28,7 +28,7 @@
   </parameters>
   <parameters>
     <label>Output Image</label>
-    <image>
+    <image type="label">
       <name>endoNoVeins</name>
       <label>Endo Layer No Veins</label>
       <longflag>Endo_Layer_No_Veins</longflag>

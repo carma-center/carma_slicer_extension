@@ -11,14 +11,14 @@
   <parameters>
     <label>IO</label>
     <description>Input/output parameters</description>
-    <image>
+    <image type="label">
       <name>targetFileName</name>
       <label>Target mask</label>
       <channel>input</channel>
       <index>0</index>
       <description>Target mask to dilate</description>
     </image>
-    <image>
+    <image type="label">
       <name>outputFileName</name>
       <label>Output</label>
       <channel>output</channel>
