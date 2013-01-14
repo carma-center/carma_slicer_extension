@@ -6,11 +6,7 @@
   <version>0.1.0</version>
   <documentation-url></documentation-url>
   <license>@MODULE_LICENSE_SHORT_DESCRIPTION@</license>
-<<<<<<< HEAD
   <contributor>Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
-=======
-  <contributor>Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
->>>>>>> 7b6d73443b779ef917f33fba16fc04163fdf25e1
   <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
   <parameters>
     <label>IO</label>
