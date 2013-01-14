@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>CARMA</category>
+  <title>Axial Dilate</title>
+  <description><![CDATA[Axial dilation for the CARMA Afib project.  This filter performs a simple 2D dilation in the axial plane.]]></description>
+  <version>0.1.0</version>
+  <documentation-url>http://wiki.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleCarmaDilate</documentation-url>
+  <license>Slicer</license>
+  <contributor>Alan Morris (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
+  <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+    <image type="label">
+      <name>targetFileName</name>
+      <label>Target mask</label>
+      <channel>input</channel>
+      <index>0</index>
+      <description>Target mask to dilate</description>
+    </image>
+    <image type="label">
+      <name>outputFileName</name>
+      <label>Output</label>
+      <channel>output</channel>
+      <index>1</index>
+      <description>Dilated mask</description>
+    </image>
+  </parameters>
+</executable>
