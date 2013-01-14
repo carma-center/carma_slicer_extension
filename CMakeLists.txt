@@ -122,4 +122,30 @@ slicerMacroBuildCLI(
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
   )
 
+#-----------------------------------------------------------------------------
+# Connected Threshold Filter Module
+#-----------------------------------------------------------------------------
 
+#-----------------------------------------------------------------------------
+set(MODULE_NAME ConnectedThresholdFilter)
+
+#-----------------------------------------------------------------------------
+slicerMacroBuildCLI(
+  NAME ${MODULE_NAME}
+  LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+  )
+
+#-----------------------------------------------------------------------------
+# Isolated Connected Filter Module
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+set(MODULE_NAME IsolatedConnectedFilter)
+
+#-----------------------------------------------------------------------------
+slicerMacroBuildCLI(
+  NAME ${MODULE_NAME}
+  LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+  )
