@@ -105,8 +105,8 @@ namespace itk
       }
 
 
-     /** PVAntrumCut needs a larger input requested region than
-       * the output requested region.  As such, PVAntrumCut needs
+     /** CarmaPVAntrumCut needs a larger input requested region than
+       * the output requested region.  As such, CarmaPVAntrumCut needs
        * to provide an implementation for GenerateInputRequestedRegion()
        * in order to inform the pipeline execution model.
        *
