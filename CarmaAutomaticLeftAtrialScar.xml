@@ -16,28 +16,28 @@
       <label>MRI image</label>
       <channel>input</channel>
       <index>0</index>
-      <description>post-ablation LGE-MRI</description>
+      <description><![CDATA[post-ablation LGE-MRI]]></description>
     </image>
     <image type="label">
       <name>lawallfn</name>
       <label>LA wall mask</label>
       <channel>input</channel>
       <index>1</index>
-      <description>LA wall (Myocardium) binary mask of the MRI</description>
+      <description><![CDATA[LA wall (Myocardium) binary mask of the MRI]]></description>
     </image>
     <image type="label">
       <name>laendofn</name>
       <label>Blood Pool mask</label>
       <channel>input</channel>
       <index>2</index>
-      <description>Blood Pool (Endocardium) binary mask of the MRI</description>
+      <description><![CDATA[Blood Pool (Endocardium) binary mask of the MRI]]></description>
     </image>
     <image type="label">
       <name>outputfn</name>
       <label>Result</label>
       <channel>output</channel>
       <index>3</index>
-      <description>Mask of post-ablation scar in the LA Wall.</description>
+      <description><![CDATA[Mask of post-ablation scar in the LA Wall.]]></description>
     </image>
   </parameters>
 </executable>
