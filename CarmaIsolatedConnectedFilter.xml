@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>CARMA</category>
+  <title>Isolated Connected Filter</title>
+  <description>This module uses the Isolated Connected Filter to produce a segmentation of an image.</description>
+  <version>0.1.0</version>
+  <documentation-url>http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleIsolatedConnected</documentation-url>
+  <license>@MODULE_LICENSE_SHORT_DESCRIPTION@</license>
+  <contributor>Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
+  <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+    <image>
+      <name>inputImage</name>
+      <label>Input image</label>
+      <longflag>inputImage</longflag>
+      <channel>input</channel>
+      <description><![CDATA[Input MRI/MRA/CT image]]></description>
+    </image>
+    <image>
+      <name>outputImage</name>
+      <label>Isolated Connected Filter Output</label>
+      <longflag>outputImage</longflag>
+      <channel>output</channel>
+      <description><![CDATA[Segmented output image]]></description>
+    </image>
+    <float>
+      <name>lowerThreshold</name>
+      <label>Lower Threshold</label>
+      <longflag>lowerThreshold</longflag>
+      <channel>input</channel>
+      <description><![CDATA[Lower threshold]]></description>
+    </float>
+    <point multiple = "true">
+      <name>seeds1</name>
+      <description><![CDATA[Seed/s in the region which is to be segmented out]]></description>
+      <label>Seeds1</label>
+      <longflag>seeds1</longflag>
+      <channel>input</channel>
+    </point>
+    <point multiple = "true">
+      <name>seeds2</name>
+      <description><![CDATA[Seed/s in the region which should not be segmented]]></description>
+      <label>Seeds2</label>
+      <longflag>seeds2</longflag>
+      <channel>input</channel>
+    </point>
+  </parameters>
+</executable>
