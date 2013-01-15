@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>CARMA</category>
+  <title>Connected Threshold Filter</title>
+  <description>This module uses the Connected Threshold Filter to produce a segmentation of an image.</description>
+  <version>0.1.0</version>
+  <documentation-url>http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleConnectedThreshold</documentation-url>
+  <license>@MODULE_LICENSE_SHORT_DESCRIPTION@</license>
+  <contributor>Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
+  <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+    <image>
+      <name>inputImage</name>
+      <label>Input Image</label>
+      <longflag>inputImage</longflag>
+      <channel>input</channel>
+      <description><![CDATA[Input MRI/MRA/CT image]]></description>
+    </image>
+    <image>
+      <name>outputImage</name>
+      <label>Connected Threshold Filter Output</label>
+      <longflag>outputImage</longflag>
+      <channel>output</channel>
+      <description><![CDATA[Segmented output image]]></description>
+    </image>
+    <float>
+      <name>lowerThreshold</name>
+      <label>Lower Threshold</label>
+      <longflag>lowerThreshold</longflag>
+      <channel>input</channel>
+      <description><![CDATA[Lower threshold]]></description>
+    </float>
+    <float>
+      <name>upperThreshold</name>
+      <label>Upper Threshold</label>
+      <longflag>upperThreshold</longflag>
+      <channel>input</channel>
+      <description><![CDATA[Upper threshold]]></description>
+    </float>
+    <point multiple = "true">
+      <name>seeds</name>
+      <description><![CDATA[Seed/s in the region which is to be segmented out]]></description>
+      <label>Seeds</label>
+      <longflag>seeds</longflag>
+      <channel>input</channel>
+    </point>
+  </parameters>
+</executable>
