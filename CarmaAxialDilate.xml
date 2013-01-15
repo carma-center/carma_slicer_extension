@@ -16,14 +16,14 @@
       <label>Target mask</label>
       <channel>input</channel>
       <index>0</index>
-      <description>Target mask to dilate</description>
+      <description><![CDATA[Target mask to dilate]]></description>
     </image>
     <image type="label">
       <name>outputFileName</name>
       <label>Output</label>
       <channel>output</channel>
       <index>1</index>
-      <description>Dilated mask</description>
+      <description><![CDATA[Dilated mask]]></description>
     </image>
   </parameters>
 </executable>
