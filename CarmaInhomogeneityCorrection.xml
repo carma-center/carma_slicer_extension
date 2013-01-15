@@ -16,28 +16,28 @@
       <label>MRI image</label>
       <channel>input</channel>
       <index>0</index>
-      <description>MRI</description>
+      <description><![CDATA[MRI input image]]></description>
     </image>
     <image>
       <name>endoFileName</name>
       <label>Blood Pool mask</label>
       <channel>input</channel>
       <index>1</index>
-      <description>Blood Pool (Endocardium) binary mask of the MRI</description>
+      <description><![CDATA[Blood Pool (Endocardium) binary mask of the MRI]]></description>
     </image>
     <image>
       <name>roiFileName</name>
       <label>ROI mask</label>
       <channel>input</channel>
       <index>2</index>
-      <description>Region to apply inhomogeneity correction</description>
+      <description><![CDATA[Region to apply inhomogeneity correction]]></description>
     </image>
     <image>
       <name>outputFileName</name>
       <label>Corrected Output</label>
       <channel>output</channel>
       <index>3</index>
-      <description>Corrected MRI</description>
+      <description><![CDATA[Corrected MRI]]></description>
     </image>
   </parameters>
 </executable>
