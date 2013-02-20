@@ -18,7 +18,7 @@
       <channel>input</channel>
       <description><![CDATA[Input MRI/MRA/CT image]]></description>
     </image>
-    <image>
+    <image type = "label">
       <name>outputImage</name>
       <label>Isolated Connected Filter Output</label>
       <longflag>outputImage</longflag>
