@@ -67,7 +67,7 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
  ##############################################################################
- # PVAntrumCut
+ # CarmaPVAntrumCut
  ##############################################################################
  set(CLP "CarmaPVAntrumCut")
 
@@ -85,3 +85,44 @@
    ${INPUT}/shrinkwrap-endo.nrrd ${INPUT}/shrinkwrap-wall.nrrd ${TEMP}/${CLP}Test.nrrd
    )
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
+
+ ##############################################################################
+ # CarmaIsolatedConnectedFilter
+ ##############################################################################
+ set(CLP "CarmaIsolatedConnectedFilter")
+
+ #-----------------------------------------------------------------------------
+ add_executable(${CLP}Test ${CLP}Test.cxx)
+ target_link_libraries(${CLP}Test ${CLP}Lib)
+ set_target_properties(${CLP}Test PROPERTIES LABELS ${CLP})
+
+ #-----------------------------------------------------------------------------
+ set(testname ${CLP}Test)
+ add_test(NAME ${testname} COMMAND ${Launcher_Command} $<TARGET_FILE:${CLP}Test>
+   --compare ${BASELINE}/${CLP}Test.nrrd
+   ${TEMP}/${CLP}Test.nrrd
+   ModuleEntryPoint
+   ${INPUT}/segmentation-data.nrrd ${INPUT}/${TEMP}Test.nrrd --lowerThreshold 150 --seeds1 1 4.42729,-6.17517,34.6671 --seeds2 72.593,21.5171,32.1671
+   )
+ set_property(TEST ${testname} PROPERTY LABELS ${CLP})
+
+ ##############################################################################
+ # CarmaConnectedThresholdFilter
+ ##############################################################################
+ set(CLP "CarmaConnectedThresholdFilter")
+
+ #-----------------------------------------------------------------------------
+ add_executable(${CLP}Test ${CLP}Test.cxx)
+ target_link_libraries(${CLP}Test ${CLP}Lib)
+ set_target_properties(${CLP}Test PROPERTIES LABELS ${CLP})
+
+ #-----------------------------------------------------------------------------
+ set(testname ${CLP}Test)
+ add_test(NAME ${testname} COMMAND ${Launcher_Command} $<TARGET_FILE:${CLP}Test>
+   --compare ${BASELINE}/${CLP}Test.nrrd
+   ${TEMP}/${CLP}Test.nrrd
+   ModuleEntryPoint
+   ${INPUT}/segmentation-data.nrrd ${INPUT}/${TEMP}Test.nrrd --lowerThreshold 150 --upperThreshold 310 --seeds 16.99,-0.290722,27.1671 --seeds -28.8485,-3.64476,27.1671
+   )
+ set_property(TEST ${testname} PROPERTY LABELS ${CLP})
+
