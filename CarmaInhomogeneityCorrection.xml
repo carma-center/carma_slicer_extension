@@ -4,7 +4,7 @@
   <title>Inhomogeneity Correction</title>
   <description><![CDATA[Inhomogeneity Correction for the CARMA Afib project.  This algorithm corrects specific types of intensity inhomogeneity.  Under the assumption that the LA blood pool should exhibit uniform intensity with Gaussian noise, we estimate localized intensity variation in the LA by fitting a second-order polynomial to intensity values only within the LA endocardium.  Intensity in the immediately adjacent LA wall is then normalized with respect to this model.  In contrast to the N4ITK MRI Bias correction filter, this filter makes certain assumptions about the MRI (e.g. blood pool uniformity), so it can correct the image in different ways.]]></description>
   <version>0.1.0</version>
-  <documentation-url>http://wiki.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleInhomogeneity</documentation-url>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleInhomogeneity</documentation-url>
   <license>Slicer</license>
   <contributor>Alan Morris (CARMA), Eugene Kholmovski (CARMA), Josh Cates (CARMA), Danny Perry (CARMA), Rob MacLeod (CARMA)</contributor>
   <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>

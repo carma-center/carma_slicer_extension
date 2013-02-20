@@ -4,7 +4,7 @@
   <title>PV Antrum Cut</title>
   <description><![CDATA[The PV Antrum Cut Filter removes pulmonary veins from left atrium endocardial segmentation. The inputs are the left atrium endocardial segmentation and the left atrium wall segmentation. The output mask represents the entire left atrium endocardial layer minus the pulmonary veins.]]></description>
   <version>0.1.0</version>
-  <documentation-url> www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModulePVAntrumCut</documentation-url>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModulePVAntrumCut</documentation-url>
   <license>Slicer</license>
   <contributor>Alan Morris(CARMA), Salma Bengali(CARMA), Greg Gardner(CARMA), Josh Cates(CARMA), Rob MacLeod(CARMA)</contributor>
   <acknowledgements></acknowledgements>

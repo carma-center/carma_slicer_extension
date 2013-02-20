@@ -4,7 +4,7 @@
   <title>Isolated Connected Filter</title>
   <description>This module uses the Isolated Connected Filter to produce a segmentation of an image.</description>
   <version>0.1.0</version>
-  <documentation-url>http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleIsolatedConnected</documentation-url>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleIsolatedConnected</documentation-url>
   <license>Slicer</license>
   <contributor>Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
   <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>

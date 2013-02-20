@@ -4,7 +4,7 @@
   <title>Axial Dilate</title>
   <description><![CDATA[Axial dilation for the CARMA Afib project.  This filter performs a simple 2D dilation in the axial plane.]]></description>
   <version>0.1.0</version>
-  <documentation-url>http://wiki.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleCarmaDilate</documentation-url>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleAxialDilate</documentation-url>
   <license>Slicer</license>
   <contributor>Alan Morris (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
   <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>

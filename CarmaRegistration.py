@@ -12,7 +12,7 @@ class CarmaRegistration:
     parent.contributors = ["Alan Morris (CARMA), Greg Gardner (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"] # replace with "Firstname Lastname (Org)"
     parent.helpText = """
     This module provides registration presets for a given set of cases related to the CARMA Afib Project. It invokes the Expert Automated Registration module with different sets of parameters tuned for different registration cases.<br><br>The steps to use this module are as follows:<br><br>
-1) Load the two volumes which need to be registered, and create a new output volume for the registration result.<br><br>2) Select the imaging modality based on the types of images that are being registered.<br><br>3) Mark the check box if the images have been cropped to the area around the left atrium. This will change the type of registration.<br><br>4) Click the 'Apply Registration' button to start the registration process.<br><br>5) The Advanced Registration Parameters can be modified in order to check if the registration result can be improved.<br><br>For more detailed information on these parameters, see the online documentation at: <a href=http://www.slicer.org/slicerWiki/index.php/Modules:RegisterImages-Documentation-3.6>http://www.slicer.org/slicerWiki/index.php/Modules:RegisterImages-Documentation-3.6</a><br><br>More information about this module can be found at <a href=http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleCardiacRegistration>http://www.na-mic.org/Wiki/index.php/DBP3:Utah:SlicerModuleCardiacRegistration</a>
+1) Load the two volumes which need to be registered, and create a new output volume for the registration result.<br><br>2) Select the imaging modality based on the types of images that are being registered.<br><br>3) Mark the check box if the images have been cropped to the area around the left atrium. This will change the type of registration.<br><br>4) Click the 'Apply Registration' button to start the registration process.<br><br>5) The Advanced Registration Parameters can be modified in order to check if the registration result can be improved.<br><br>For more detailed information on these parameters, see the online documentation at: <a href=http://www.slicer.org/slicerWiki/index.php/Modules:RegisterImages-Documentation-3.6>http://www.slicer.org/slicerWiki/index.php/Modules:RegisterImages-Documentation-3.6</a><br><br>More information about this module can be found at <a href=http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleCardiacRegistration>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleCardiacRegistration</a>
     """
     parent.acknowledgementText = """
     This file was supported by...
@@ -214,18 +214,32 @@ class CarmaRegistrationWidget:
     self.iterFrame.layout().addWidget(self.iterSpinBox)    
     
     # Sampling Ratio Slider
-    self.frame = qt.QFrame(collapsibleButton2)
-    self.frame.setLayout(qt.QHBoxLayout())
-    formLayout2.addWidget(self.frame)
-    self.sampSliderSelector = qt.QLabel("Sampling Ratio (Accuracy of Registration): ", self.frame)
-    self.sampSliderSelector.tooltip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration"
-    self.frame.layout().addWidget(self.sampSliderSelector)
-    self.sampSliderFrame = ctk.ctkSliderWidget()
-    self.sampSliderFrame.minimum = 0
-    self.sampSliderFrame.maximum = 1
-    self.sampSliderFrame.decimals = 2
-    self.sampSliderFrame.singleStep = 0.01
-    self.frame.layout().addWidget(self.sampSliderFrame)
+    self.sampFrame = qt.QFrame(collapsibleButton2)
+    self.sampFrame.setLayout(qt.QHBoxLayout())
+    formLayout2.addWidget(self.sampFrame)
+    self.sampSelector = qt.QLabel("Enter the Sampling Ratio: ", self.sampFrame)
+    self.sampFrame.layout().addWidget(self.sampSelector)
+    self.sampSpinBox = qt.QSpinBox()
+    self.sampSpinBox.setLayout(qt.QHBoxLayout())
+    self.sampSpinBox.setMinimum(0)
+    self.sampSpinBox.setMaximum(1)
+    self.sampSpinBox.setSingleStep(0.01)
+    self.sampSpinBox.setValue(0)
+    self.sampSpinBox.toolTip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration."
+    self.frame.layout().addWidget(self.sampSpinBox) 
+    
+    #self.frame = qt.QFrame(collapsibleButton2)
+    #self.frame.setLayout(qt.QHBoxLayout())
+    #formLayout2.addWidget(self.frame)
+    #self.sampSliderSelector = qt.QLabel("Sampling Ratio (Accuracy of Registration): ", self.frame)
+    #self.sampSliderSelector.tooltip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration"
+    #self.frame.layout().addWidget(self.sampSliderSelector)
+    #self.sampSliderFrame = ctk.ctkSliderWidget()
+    #self.sampSliderFrame.minimum = 0
+    #self.sampSliderFrame.maximum = 1
+    #self.sampSliderFrame.decimals = 2
+    #self.sampSliderFrame.singleStep = 0.01
+    #self.frame.layout().addWidget(self.sampSliderFrame)
        
     # Sample from fixed/moving overlap check box
     self.sampleCheckBox = qt.QCheckBox("Sample from fixed/moving image overlap", collapsibleButton2)
