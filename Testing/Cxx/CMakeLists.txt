@@ -99,10 +99,12 @@
  #-----------------------------------------------------------------------------
  set(testname ${CLP}Test)
  add_test(NAME ${testname} COMMAND ${Launcher_Command} $<TARGET_FILE:${CLP}Test>
-   --compare ${BASELINE}/${CLP}Test.nrrd
-   ${TEMP}/${CLP}Test.nrrd
    ModuleEntryPoint
-   ${INPUT}/segmentation-data.nrrd ${INPUT}/${TEMP}Test.nrrd --lowerThreshold 150 --seeds1 1 4.42729,-6.17517,34.6671 --seeds2 72.593,21.5171,32.1671
+   --inputImage ${INPUT}/segmentation-data.nrrd 
+   --outputImage ${TEMP}/${CLP}Test.nrrd 
+   --lowerThreshold 150 
+   --seeds1 4.42729,-6.17517,34.6671 
+   --seeds2 72.593,21.5171,32.1671
    )
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
@@ -119,10 +121,13 @@
  #-----------------------------------------------------------------------------
  set(testname ${CLP}Test)
  add_test(NAME ${testname} COMMAND ${Launcher_Command} $<TARGET_FILE:${CLP}Test>
-   --compare ${BASELINE}/${CLP}Test.nrrd
-   ${TEMP}/${CLP}Test.nrrd
    ModuleEntryPoint
-   ${INPUT}/segmentation-data.nrrd ${INPUT}/${TEMP}Test.nrrd --lowerThreshold 150 --upperThreshold 310 --seeds 16.99,-0.290722,27.1671 --seeds -28.8485,-3.64476,27.1671
+   --inputImage ${INPUT}/segmentation-data.nrrd 
+   --outputImage ${TEMP}/${CLP}Test.nrrd 
+   --lowerThreshold 150 
+   --upperThreshold 310 
+   --seeds 16.99,-0.290722,27.1671 
+   --seeds -28.8485,-3.64476,27.1671
    )
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
