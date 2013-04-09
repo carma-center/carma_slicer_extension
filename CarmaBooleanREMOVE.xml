@@ -4,7 +4,7 @@
   <title>Boolean REMOVE Filter</title>
   <description><![CDATA[Subtracts two segmentations (label maps). Data must be loaded as label maps in order to be used as inputs to this filter.]]></description>
   <version>0.1.0</version>
-  <documentation-url>www.slicer.org</documentation-url>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleBooleanRemove</documentation-url>
   <license>Slicer</license><license>Slicer</license>
   <contributor>Salma Bengali(CARMA), Alan Morris(CARMA), Josh Cates(CARMA), Rob MacLeod(CARMA)</contributor>
   <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
