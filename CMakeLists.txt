@@ -29,7 +29,7 @@ set(MODULE_TARGET_LIBRARIES
 set(MODULE_NAME "CarmaInhomogeneityCorrection")
 
 #-----------------------------------------------------------------------------
-slicerMacroBuildCLI(
+SEMMacroBuildCLI(
   NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
@@ -43,7 +43,7 @@ slicerMacroBuildCLI(
 set(MODULE_NAME "CarmaAxialDilate")
 
 #-----------------------------------------------------------------------------
-slicerMacroBuildCLI(
+SEMMacroBuildCLI(
   NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
@@ -75,7 +75,7 @@ ctkMacroCompilePythonScript(
 set(MODULE_NAME CarmaAutomaticLeftAtrialScar)
 
 #-----------------------------------------------------------------------------
-slicerMacroBuildCLI(
+SEMMacroBuildCLI(
   NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
@@ -116,7 +116,7 @@ ctkMacroCompilePythonScript(
 set(MODULE_NAME CarmaPVAntrumCut)
 
 #-----------------------------------------------------------------------------
-slicerMacroBuildCLI(
+SEMMacroBuildCLI(
   NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
@@ -130,7 +130,7 @@ slicerMacroBuildCLI(
 set(MODULE_NAME CarmaConnectedThresholdFilter)
 
 #-----------------------------------------------------------------------------
-slicerMacroBuildCLI(
+SEMMacroBuildCLI(
   NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
@@ -144,7 +144,21 @@ slicerMacroBuildCLI(
 set(MODULE_NAME CarmaIsolatedConnectedFilter)
 
 #-----------------------------------------------------------------------------
-slicerMacroBuildCLI(
+SEMMacroBuildCLI(
+  NAME ${MODULE_NAME}
+  LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+  )
+
+#-----------------------------------------------------------------------------
+# Boolean REMOVE Filter Module
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+set(MODULE_NAME CarmaBooleanREMOVE)
+
+#-----------------------------------------------------------------------------
+SEMMacroBuildCLI(
   NAME ${MODULE_NAME}
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
