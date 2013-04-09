@@ -1,4 +1,3 @@
-
  #-----------------------------------------------------------------------------
  set(Launcher_Command ${Slicer_LAUNCH_COMMAND})
  set(BASELINE ${CMAKE_CURRENT_SOURCE_DIR}/../../Data/Baseline)
@@ -131,3 +130,20 @@
    )
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
+##############################################################################
+ # CarmaBooleanREMOVE
+ ##############################################################################
+ set(CLP "CarmaBooleanREMOVE")
+
+ #-----------------------------------------------------------------------------
+ add_executable(${CLP}Test ${CLP}Test.cxx)
+ target_link_libraries(${CLP}Test ${CLP}Lib)
+ set_target_properties(${CLP}Test PROPERTIES LABELS ${CLP})
+
+ #-----------------------------------------------------------------------------
+ set(testname ${CLP}Test)
+ add_test(NAME ${testname} COMMAND ${Launcher_Command} $<TARGET_FILE:${CLP}Test>
+   ModuleEntryPoint
+   ${INPUT}/boolean-endodilate.nrrd ${INPUT}/boolean-endo.nrrd ${TEMP}/${CLP}Test.nrrd
+   )
+ set_property(TEST ${testname} PROPERTY LABELS ${CLP})
