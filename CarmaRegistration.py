@@ -213,33 +213,18 @@ class CarmaRegistrationWidget:
     self.iterSpinBox.toolTip = "The maximum number of iterations to try before failing to converge."
     self.iterFrame.layout().addWidget(self.iterSpinBox)    
     
-    # Sampling Ratio Slider
-    self.sampFrame = qt.QFrame(collapsibleButton2)
-    self.sampFrame.setLayout(qt.QHBoxLayout())
-    formLayout2.addWidget(self.sampFrame)
-    self.sampSelector = qt.QLabel("Enter the Sampling Ratio: ", self.sampFrame)
-    self.sampFrame.layout().addWidget(self.sampSelector)
-    self.sampSpinBox = qt.QSpinBox()
-    self.sampSpinBox.setLayout(qt.QHBoxLayout())
-    self.sampSpinBox.setMinimum(0)
-    self.sampSpinBox.setMaximum(1)
-    self.sampSpinBox.setSingleStep(0.01)
-    self.sampSpinBox.setValue(0)
-    self.sampSpinBox.toolTip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration."
-    self.frame.layout().addWidget(self.sampSpinBox) 
-    
-    #self.frame = qt.QFrame(collapsibleButton2)
-    #self.frame.setLayout(qt.QHBoxLayout())
-    #formLayout2.addWidget(self.frame)
-    #self.sampSliderSelector = qt.QLabel("Sampling Ratio (Accuracy of Registration): ", self.frame)
-    #self.sampSliderSelector.tooltip = "Increasing the sampling ratio will increase registration accuracy but reduce the speed of registration"
-    #self.frame.layout().addWidget(self.sampSliderSelector)
-    #self.sampSliderFrame = ctk.ctkSliderWidget()
-    #self.sampSliderFrame.minimum = 0
-    #self.sampSliderFrame.maximum = 1
-    #self.sampSliderFrame.decimals = 2
-    #self.sampSliderFrame.singleStep = 0.01
-    #self.frame.layout().addWidget(self.sampSliderFrame)
+    # Sampling Ratio Slider    
+    self.sampframe = qt.QFrame(collapsibleButton2)
+    self.sampframe.setLayout(qt.QHBoxLayout())
+    formLayout2.addWidget(self.sampframe)
+    self.sampSliderSelector = qt.QLabel("Sampling Ratio (Accuracy of Registration): ", self.sampframe)
+    self.sampframe.layout().addWidget(self.sampSliderSelector)
+    self.sampSliderFrame = ctk.ctkSliderWidget()
+    self.sampSliderFrame.minimum = 0
+    self.sampSliderFrame.maximum = 1
+    self.sampSliderFrame.decimals = 2
+    self.sampSliderFrame.singleStep = 0.01
+    self.sampframe.layout().addWidget(self.sampSliderFrame)
        
     # Sample from fixed/moving overlap check box
     self.sampleCheckBox = qt.QCheckBox("Sample from fixed/moving image overlap", collapsibleButton2)
@@ -261,7 +246,6 @@ class CarmaRegistrationWidget:
         self.initComboBox.setCurrentIndex(0)   # ImageCenters
         self.interpComboBox.setCurrentIndex(1) # Linear
         self.iterSpinBox.setValue(100)         
-        #self.sampSpinBox.setValue(0.05)
         self.sampSliderFrame.value = 0.05  
       else:
         self.regnComboBox.setCurrentIndex(4)   # PipelineAffine
@@ -269,7 +253,6 @@ class CarmaRegistrationWidget:
         self.initComboBox.setCurrentIndex(0)   # ImageCenters
         self.interpComboBox.setCurrentIndex(1) # Linear
         self.iterSpinBox.setValue(100)         
-        #self.sampSpinBox.setValue(0.05) 
         self.sampSliderFrame.value = 0.05
     elif method == 'MRA to MRA': 
       if state == 0:
@@ -278,7 +261,6 @@ class CarmaRegistrationWidget:
         self.initComboBox.setCurrentIndex(0)   # ImageCenters
         self.interpComboBox.setCurrentIndex(1) # Linear
         self.iterSpinBox.setValue(100)
-        #self.sampSpinBox.setValue(0.05)
         self.sampSliderFrame.value = 0.05
       else:
         self.regnComboBox.setCurrentIndex(4)   # PipelineAffine
@@ -286,7 +268,6 @@ class CarmaRegistrationWidget:
         self.initComboBox.setCurrentIndex(0)   # ImageCenters
         self.interpComboBox.setCurrentIndex(1) # Linear
         self.iterSpinBox.setValue(100)
-        #self.sampSpinBox.setValue(0.05)
         self.sampSliderFrame.value = 0.05
     
     
