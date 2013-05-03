@@ -163,3 +163,5 @@ SEMMacroBuildCLI(
   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
   )
+
+add_subdirectory(HeartGraph_SlicerExtension)
