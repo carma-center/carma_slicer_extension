@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
     <category>CARMA</category> 
-    <title>Mesh to Graph to SurfVnet</title>
+    <title>LA Segmentation Using Graph Cuts</title>
     <description>This module implements an algorithm to automatically segment out the Left Atrium from an LGE-MRI image volume.</description>
     <version>0.1.0</version>
     <documentation-url></documentation-url>
@@ -16,21 +16,31 @@
             <label>Input Image</label>
             <index>0</index>
             <channel>input</channel>
-            <description><![CDATA[Cardiac LGE-MRI image]]></description>
+            <description><![CDATA[Cardiac LGE-MRI input image volume]]></description>
         </image>
         <integer>
             <name>deltaS</name>
             <label>Smoothness Parameter</label>
             <index>1</index>
             <channel>input</channel>
-            <description><![CDATA[Smoothness constraint for a surface]]></description>
+            <constraints>
+                <minimum> 4 </minimum>
+                <maximum> 10 </maximum>
+                <step> 1 </step>
+            </constraints>
+            <description><![CDATA[Smoothness constraint for a surface (range 4-10)]]></description>
         </integer>
-	<integer>
+        <integer>
             <name>MdlOption</name>
             <label>Model selection Parameter</label>
             <index>2</index>
             <channel>input</channel>
-            <description><![CDATA[Selection of model]]></description>
+            <constraints>
+                <minimum> 1 </minimum>
+                <maximum> 5 </maximum>
+                <step> 1 </step>
+            </constraints>
+            <description><![CDATA[Selection of model number]]></description>
         </integer>
         <image type="label">
             <name>outputImage</name>
@@ -44,48 +54,42 @@
             <label>Input Data Directory</label>
             <index>4</index>
             <channel>input</channel>
-            <description><![CDATA[The directory from which to import data files]]></description>
-            <!--<default>/Users/salmabengali/data/1/</default> -->
+            <description><![CDATA[The directory from which to import a specific model's data]]></description>
         </directory> 
-	 <file>
+        <file>
             <name>epiMesh</name>
             <label>Epi Mesh</label>
             <index>5</index>
             <channel>output</channel>
-            <description><![CDATA[The epi mesh]]></description>
+            <description><![CDATA[The output epi mesh]]></description>
         </file>
         <file>
             <name>endoMesh</name>
             <label>Endo Mesh</label>
             <index>6</index>
             <channel>output</channel>
-            <description><![CDATA[The endo mesh]]></description>
+            <description><![CDATA[The output endo mesh]]></description>
         </file>
-	 <float>
+        <float>
             <name>row</name>
             <label>Row</label>
             <index>7</index>
             <channel>input</channel>
-            <description><![CDATA[Center of mass row]]></description>
+            <description><![CDATA[Manually select the center of mass of the LA and enter the row]]></description>
         </float>
-	 <float>
+        <float>
             <name>column</name>
             <label>Column</label>
             <index>8</index>
             <channel>input</channel>
-            <description><![CDATA[Center of mass column]]></description>
+            <description><![CDATA[Manually select the center of mass of the LA and enter the column]]></description>
         </float>
-	 <float>
+        <float>
             <name>slice</name>
             <label>Slice</label>
             <index>9</index>
             <channel>input</channel>
-            <description><![CDATA[Center of mass Slice]]></description>
+            <description><![CDATA[Manually select the center of mass of the LA and enter the slice]]></description>
         </float>
-       <!--<file multiple="true">
-            <name>args</name>
-            <index>3</index>
-            <description>The directory from which to import data files</description>
-       </file> -->
     </parameters>
 </executable>

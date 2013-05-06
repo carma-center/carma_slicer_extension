@@ -22,7 +22,7 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkAddImageFilter.h"
-#include "mesh2graph2surfVnetCLP.h"
+#include "CarmaLASegmentationGraphCutsCLP.h"
 // Include header file for reampling image
 #include "ResampleVolume.h"
 
@@ -820,6 +820,7 @@ void connectmat(std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat)
 // Reading point files
 void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM)
 {
+		std::cerr << "in readCmatrix" << std::endl;
     int v_no = 0;
     while(!myfile.eof()){
         std::string line;
@@ -843,6 +844,7 @@ void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCO
 
 // stick matrix
 void readstkmatrix(float** &stkglmatrix, std::ifstream &stkintFile, int& nop, int& numel){
+		std::cerr << "in readstkmatrix" << std::endl;
     for(int n = 0; n < nop; n++){
         std::string line;
         getline(stkintFile,line);
