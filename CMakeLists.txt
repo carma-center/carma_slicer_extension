@@ -164,4 +164,7 @@ SEMMacroBuildCLI(
   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
   )
 
-add_subdirectory(HeartGraph_SlicerExtension)
+#-----------------------------------------------------------------------------
+# Add LA Segmentation Using Graph Cuts Module
+#-----------------------------------------------------------------------------
+ADD_SUBDIRECTORY(CarmaLASegmentationGraphCuts)
