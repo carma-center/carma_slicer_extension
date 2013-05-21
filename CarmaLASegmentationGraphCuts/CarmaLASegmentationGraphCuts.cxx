@@ -72,10 +72,10 @@ int main(int argc, char *argv[])
     int DELTAS = deltaS;
     int MDL_OPTION = MdlOption; // model selection
     // convert model option from integer to string
-    std::string S;
-    std::stringstream out;
-    out << MDL_OPTION;
-    S = out.str();
+    std::string model_option_str;
+    std::stringstream model_option;
+    model_option << MDL_OPTION;
+    model_option_str = model_option.str();
     vec1f RealCOM(3,0);
     RealCOM[0] = row;
     RealCOM[1] = column;
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 
     std::string textfile;
     std::stringstream triFile;
-    triFile << model_dir << "/POSTENDO0" << S << "RLS.txt_0_0.tri";
+    triFile << model_dir << "//POSTENDO0" << model_option_str << "RLS.txt_0_0.tri";
     textfile = triFile.str();
 		
     std::ifstream inTextFile(textfile.c_str());
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
     for(int m = 0; m < Mlayers; m++){
         nop = 0;
         std::stringstream ptsFile;
-        ptsFile << model_dir << "/POSTENDO0" << S << "RLS.txt_" << Cooridx[m] << ".pts";
+        ptsFile << model_dir << "//POSTENDO0" << model_option_str << "RLS.txt_" << Cooridx[m] << ".pts";
         Coorfile = ptsFile.str();
         
         std::ifstream inPtFile(Coorfile.c_str()); // converting to C_std::string
@@ -216,10 +216,8 @@ int main(int argc, char *argv[])
         nop = 0;
         
         std::stringstream ptsFile;
-        ptsFile << model_dir << "/POSTENDO0" << S << "RLS.txt_" << Cooridx[mDS] << ".pts";
+        ptsFile << model_dir << "//POSTENDO0" << model_option_str << "RLS.txt_" << Cooridx[mDS] << ".pts";
         Coorfile = ptsFile.str();
-            //Coorfile = "/Users/salmabengali/data/1/POSTENDO01RLS.txt_.pts";
-            //Coorfile.insert(25 + 20,Cooridx[mDS]);
         
         std::ifstream inPtFile(Coorfile.c_str()); // converting to C_std::string
         if(inPtFile.fail())
@@ -246,9 +244,8 @@ int main(int argc, char *argv[])
 
     // put Model stick intensities into 2D matrix
     std::stringstream OSMFile;
-    OSMFile << model_dir << "/POSTWALL0" << S << "RLS_1_3_twinstk2.dat";
+    OSMFile << model_dir << "//POSTWALL0" << model_option_str << "RLS_1_3_twinstk2.dat";
     stkglfile = OSMFile.str();
-    //stkglfile = "/Users/salmabengali/data/1/POSTWALL01RLS_1_3_twinstk2.dat";
     
     std::ifstream stkintFile1(stkglfile.c_str()); // converting to C_std::string
     if(stkintFile1.fail())
@@ -267,7 +264,7 @@ int main(int argc, char *argv[])
     readstkmatrix(Mstkglmat1, stkintFile1, nop, numstkgl);
 
     std::stringstream ISMFile;
-    ISMFile << model_dir << "/POSTENDO0" << S << "RLS_0_0stk2.dat";
+    ISMFile << model_dir << "//POSTENDO0" << model_option_str << "RLS_0_0stk2.dat";
     stkglfile = ISMFile.str();
         //stkglfile = "/Users/salmabengali/data/1/POSTENDO01RLS_0_0stk2.dat";
     
@@ -293,7 +290,7 @@ int main(int argc, char *argv[])
     // put stick indices into 3D matrix
     for (int m = 0; m < layers; m++){
         std::stringstream MIFile;
-        MIFile << model_dir << "/POSTENDO0" << S << "RLS_" << Cooridx[m] << "stkidx2.dat";;
+        MIFile << model_dir << "//POSTENDO0" << model_option_str << "RLS_" << Cooridx[m] << "stkidx2.dat";;
         stkidxfile = MIFile.str();
             //stkidxfile = "/Users/salmabengali/data/1/POSTENDO01RLS_stkidx2.dat";
             //stkidxfile.insert(25 + 16,Cooridx[m]);
