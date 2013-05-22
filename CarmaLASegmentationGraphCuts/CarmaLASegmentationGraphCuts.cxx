@@ -847,7 +847,7 @@ void readstkmatrix(float** &stkglmatrix, std::ifstream &stkintFile, int& nop, in
         getline(stkintFile,line);
 
         std::stringstream lineStream(line);
-        float numbers[numel];
+        float *numbers = new float[numel];
         for(int i=0; i < numel; i++)
             lineStream >> numbers[i];
 
@@ -855,6 +855,7 @@ void readstkmatrix(float** &stkglmatrix, std::ifstream &stkintFile, int& nop, in
             stkglmatrix[n][j] = numbers[j];
 //            std::cout << stkglmatrix[n][j] << " ";
         }
+        delete[] numbers;
 //        std::cout << "\n";
     }
 }
