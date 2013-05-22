@@ -6,8 +6,8 @@ from __main__ import vtk, qt, ctk, slicer
 
 class CarmaRegistration:
   def __init__(self, parent):
-    parent.title = "Carma Registration"
-    parent.categories = ["CARMA"]
+    parent.title = "Cardiac MRI Registration"
+    parent.categories = ["Cardiac MRI Toolkit"]
     parent.dependencies = []
     parent.contributors = ["Alan Morris (CARMA), Greg Gardner (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"] # replace with "Firstname Lastname (Org)"
     parent.helpText = """

@@ -6,8 +6,8 @@ from __main__ import vtk, qt, ctk, slicer
 
 class CarmaRegistrationBRAINSFit:
   def __init__(self, parent):
-    parent.title = "Carma Registration BRAINSFit"
-    parent.categories = ["CARMA"]
+    parent.title = "Cardiac MRI BRAINSFit Registration"
+    parent.categories = ["Cardiac MRI Toolkit"]
     parent.dependencies = []
     parent.contributors = ["Salma Bengali (CARMA), Alan Morris (CARMA), Greg Gardner (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"]
     parent.helpText = """
