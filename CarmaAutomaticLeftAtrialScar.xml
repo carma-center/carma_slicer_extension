@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>CARMA</category>
+  <category>Cardiac MRI Toolkit</category>
   <title>Automatic Left Atrial Scar</title>
   <description><![CDATA[Determine Left Atrial Scar Automatically given the wall segmentation, in a post-ablation LGE-MRI. For details see: Perry, D. et al. "Automatic classification of scar tissue...", Proceedings of SPIE Medical Imaging: Computer Aided Diagnosis, Feb 2012.]]></description>
   <version>0.1.0</version>

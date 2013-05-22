@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>CARMA</category>
+  <category>Cardiac MRI Toolkit</category>
   <title>Connected Threshold Filter</title>
   <description>This module uses the Connected Threshold Filter to produce a segmentation of an image.</description>
   <version>0.1.0</version>

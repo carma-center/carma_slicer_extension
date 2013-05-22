@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.7)
 
 #-----------------------------------------------------------------------------
-set(EXTENSION_NAME carma)
-set(EXTENSION_HOMEPAGE "http://www.carmacenter.org")
-set(EXTENSION_CATEGORY "CARMA")
+set(EXTENSION_NAME "Cardiac_MRI_Toolkit")
+set(EXTENSION_HOMEPAGE "http://capulet.med.utah.edu/namic")
+set(EXTENSION_CATEGORY "Cardiac MRI toolkit")
 set(EXTENSION_STATUS "Beta")
 set(EXTENSION_ICONURL "http://www.na-mic.org/Wiki/images/a/ac/Carma-logo-128.png")
 set(EXTENSION_CONTRIBUTORS "Alan Morris (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA), Eugene Kholmovski (CARMA)")

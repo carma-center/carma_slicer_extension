@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>CARMA</category>
+  <category>Cardiac MRI Toolkit</category>
   <title>PV Antrum Cut</title>
   <description><![CDATA[The PV Antrum Cut Filter removes pulmonary veins from left atrium endocardial segmentation. The inputs are the left atrium endocardial segmentation and the left atrium wall segmentation. The output mask represents the entire left atrium endocardial layer minus the pulmonary veins.]]></description>
   <version>0.1.0</version>

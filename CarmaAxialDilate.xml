@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>CARMA</category>
+  <category>Cardiac MRI Toolkit</category>
   <title>Axial Dilate</title>
   <description><![CDATA[Axial dilation for the CARMA Afib project.  This filter performs a simple 2D dilation in the axial plane.]]></description>
   <version>0.1.0</version>

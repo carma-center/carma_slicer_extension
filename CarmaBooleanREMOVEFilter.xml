@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>CARMA</category>
+  <category>Cardiac MRI Toolkit</category>
   <title>Boolean REMOVE Filter</title>
   <description><![CDATA[Subtracts two segmentations (label maps). Data must be loaded as label maps in order to be used as inputs to this filter.]]></description>
   <version>0.1.0</version>
