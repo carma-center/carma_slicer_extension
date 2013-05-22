@@ -5,9 +5,9 @@ set(EXTENSION_NAME "Cardiac_MRI_Toolkit")
 set(EXTENSION_HOMEPAGE "http://capulet.med.utah.edu/namic")
 set(EXTENSION_CATEGORY "Cardiac MRI toolkit")
 set(EXTENSION_STATUS "Beta")
-set(EXTENSION_ICONURL "http://www.na-mic.org/Wiki/images/a/ac/Carma-logo-128.png")
+set(EXTENSION_ICONURL "http://capulet.med.utah.edu/namic/images/CMRTK-logo.png")
 set(EXTENSION_CONTRIBUTORS "Alan Morris (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA), Eugene Kholmovski (CARMA)")
-set(EXTENSION_DESCRIPTION "The CARMA extension includes modules for the Utah Afib DBP")
+set(EXTENSION_DESCRIPTION "The Cardiac MRI Toolkit includes modules for the Utah Afib DBP")
 set(EXTENSION_SCREENSHOTURLS "http://wiki.na-mic.org/Wiki/images/d/d1/Carma_afib_inhomogeneity_correction.png http://wiki.na-mic.org/Wiki/images/7/7a/Carma_afib_auto_scar.png")
 
 #-----------------------------------------------------------------------------
