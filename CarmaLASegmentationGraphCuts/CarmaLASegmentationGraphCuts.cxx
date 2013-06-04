@@ -62,6 +62,8 @@ int main(int argc, char *argv[])
 {
     PARSE_ARGS;
 		
+
+
     /*if(argc < 4){
         std::cerr << "Usage: " << std::std::endl;
         std::cerr << argv[0] << " InputImage" << " OutputImageFilename" << "SmoothnessParameter" << std::endl;
@@ -92,15 +94,18 @@ int main(int argc, char *argv[])
     }else if (MDL_OPTION == 2){
         no_vertices = 16087;// for atrium data cluster 3
     }else if (MDL_OPTION == 3){
-        no_vertices = 16913; // for atrium data cluster 4
+      no_vertices = 16913; // for atrium data cluster 4
     }else if(MDL_OPTION == 4){
         no_vertices = 14747; // for atrium data cluster 5
+
+        // AKM: overriding!
+        no_vertices = 16913; // for atrium data cluster 4
     }
 
     image1 = argv[1];
     image2 = argv[2];
-    opmeshfile1 = argv[6];
-    opmeshfile2 = argv[7];
+    opmeshfile1 = epiMesh;
+    opmeshfile2 = endoMesh;
 
     // reading input image
     ReaderType::Pointer reader = ReaderType::New();
@@ -733,7 +738,7 @@ void readmatrix(std::vector< std::vector<int> >& matrix, std::ifstream& myfile, 
     std::stringstream lineStream(line);
     std::vector<int> numbers;
     int num;
-    char strDump[4]; // for ellipsoid case
+    char strDump[5]; // for ellipsoid case
     // char strDump[1]; // for planar case
 
     lineStream >> strDump; // neglect the initial std::string
@@ -1007,7 +1012,7 @@ void finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, vector<ve
     outdata.open(opmeshfile.c_str());
     if ( !outdata ){
         cerr << "Error: file could not be opened" << endl;
-        exit(1);
+        return;
     }
 
     outdata << "# vtk DataFile Version 3.0\nOriginal surfacemesh\nASCII\nDATASET POLYDATA\nPOINTS " << nop << " float" << "\n";
