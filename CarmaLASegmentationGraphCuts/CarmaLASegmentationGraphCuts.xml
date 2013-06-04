@@ -32,12 +32,12 @@
         </integer>
         <integer>
             <name>MdlOption</name>
-            <label>Model selection Parameter</label>
+            <label>Model Number Parameter</label>
             <index>2</index>
             <channel>input</channel>
             <constraints>
                 <minimum> 1 </minimum>
-                <maximum> 5 </maximum>
+                <maximum> 4 </maximum>
                 <step> 1 </step>
             </constraints>
             <description><![CDATA[Selection of model number]]></description>
