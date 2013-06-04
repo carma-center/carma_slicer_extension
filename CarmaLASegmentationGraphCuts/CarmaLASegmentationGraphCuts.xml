@@ -56,20 +56,20 @@
             <channel>input</channel>
             <description><![CDATA[The directory from which to import a specific model's data]]></description>
         </directory> 
-        <file>
+	<geometry fileExtensions=".vtk">
             <name>epiMesh</name>
             <label>Epi Mesh</label>
             <index>5</index>
             <channel>output</channel>
             <description><![CDATA[The output epi mesh]]></description>
-        </file>
-        <file>
+	</geometry>
+	<geometry fileExtensions=".vtk">
             <name>endoMesh</name>
             <label>Endo Mesh</label>
             <index>6</index>
             <channel>output</channel>
             <description><![CDATA[The output endo mesh]]></description>
-        </file>
+	</geometry>
         <float>
             <name>row</name>
             <label>Row</label>
