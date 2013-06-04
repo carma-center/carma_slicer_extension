@@ -13,7 +13,7 @@
         <description>Input/output parameters</description>
         <image>
             <name>inputImage</name>
-            <label>Input Image</label>
+            <label>Input MRI Image</label>
             <index>0</index>
             <channel>input</channel>
             <description><![CDATA[Cardiac LGE-MRI input image volume]]></description>
@@ -51,7 +51,7 @@
         </image>
         <directory>
             <name>inputDataDirectory</name>
-            <label>Input Data Directory</label>
+            <label>Model Data Directory</label>
             <index>4</index>
             <channel>input</channel>
             <description><![CDATA[The directory from which to import a specific model's data]]></description>
