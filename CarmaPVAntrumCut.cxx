@@ -81,7 +81,6 @@ int main(int argc, char *argv[])
 	
 	WriterType::Pointer writer;
 	writer = WriterType::New();
-	std::cerr << "Writing to file: " << endoNoVeins.c_str() << "\n";
 	writer->SetFileName( endoNoVeins );
 	writer->SetInput(mask_image);
 	writer->UseCompressionOn();
