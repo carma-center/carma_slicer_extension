@@ -167,4 +167,9 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 # Add LA Segmentation Using Graph Cuts Module
 #-----------------------------------------------------------------------------
-ADD_SUBDIRECTORY(CarmaLASegmentationGraphCuts)
+add_subdirectory(CarmaLASegmentationGraphCuts)
+
+#-----------------------------------------------------------------------------
+# Add Cardiac MRI Toolkit Wizard
+#-----------------------------------------------------------------------------
+add_subdirectory(CMRToolkitWizard)
