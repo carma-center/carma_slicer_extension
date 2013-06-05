@@ -17,7 +17,7 @@ class CMRToolkitWizardSelectDataStep( CMRToolkitWizardStep ) :
     '''
     self.__layout = self.__parent.createUserInterface()
     
-    loadDataButton = qt.QPushButton('Load test data')
+    loadDataButton = qt.QPushButton('Download test data')
     self.__layout.addRow(loadDataButton)
     loadDataButton.connect('clicked()', self.loadData)
 
