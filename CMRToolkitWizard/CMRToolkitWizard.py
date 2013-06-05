@@ -13,7 +13,8 @@ class CMRToolkitWizard:
     parent.dependencies = []
     parent.contributors = ["Salma Bengali (CARMA), Alan Morris (CARMA), Brian Zenger (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"] # replace with "Firstname Lastname (Org)"
     parent.helpText = """
-    This module takes the user through each step involved in analyzing cardiac LGE-MRI images for scar enhancement.
+    This module takes the user through each step involved in analyzing cardiac LGE-MRI images for scar enhancement. To use the module follow the workflow that consists of 8 steps:<br><br>
+    1. Select the input cardiac MRI image.<br><br>2. Manually segment the left atrial (LA) endocardium region.<br><br>3. Axially dilate the endocardium segmentation to obtain the epicardium region.<br><br>4. Subtract the endocardium segmentation from the epicardium segmentation to obtain the wall region.<br><br>5. Remove the pulmonary veins (PVs) from the wall segmentation.<br><br>6. Cut off the PVs from the endocardium segmentation created in step 2.<br><br>7. Create the isosurface of the endocardium segmentation without the PVs.<br><br>8. Run the automatic scar module to view regions of scar enhancement in the MRI. Create the isosurface of the scar to view it overlaid on the endocardium isosurface.<br><br>More information about this module can be found at <a href=http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleCMRToolkitWizard>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleCMRToolkitWizard</a>
     """
     parent.acknowledgementText = """
     This file was supported by...
