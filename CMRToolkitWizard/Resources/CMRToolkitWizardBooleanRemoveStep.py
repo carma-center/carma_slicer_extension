@@ -86,8 +86,8 @@ class CMRToolkitWizardBooleanRemoveStep( CMRToolkitWizardStep ) :
   def onExit(self, goingTo, transitionType):
     pNode = self.parameterNode()
 
-    if goingTo.id() != 'LAWallCleanup':
-      return
+    #if goingTo.id() != 'LAWallCleanup':
+    #  return
       
     super(CMRToolkitWizardBooleanRemoveStep, self).onExit(goingTo, transitionType)
     

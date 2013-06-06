@@ -49,7 +49,7 @@ class CMRToolkitWizardSelectDataStep( CMRToolkitWizardStep ) :
       pNode.SetParameter('inputVolumeID', inputID)        
       self.__parent.validationSucceeded(desiredBranchId)
     else:
-      self.__parent.validationFailed(desiredBranchId, 'Error','Please select an image to proceed.')    
+      self.__parent.validationFailed(desiredBranchId, 'Select Data','Please select an image to proceed.')    
 
   def onEntry(self, comingFrom, transitionType):
     super(CMRToolkitWizardSelectDataStep, self).onEntry(comingFrom, transitionType)
@@ -59,8 +59,8 @@ class CMRToolkitWizardSelectDataStep( CMRToolkitWizardStep ) :
 
   def onExit(self, goingTo, transitionType):
     pNode = self.parameterNode()    
-    if goingTo.id() != 'LAEndoSegmentation':
-      return
+    #if goingTo.id() != 'LAEndoSegmentation':
+    #  return
       
     super(CMRToolkitWizardSelectDataStep, self).onExit(goingTo, transitionType)
 

@@ -87,8 +87,8 @@ class CMRToolkitWizardAntrumCutStep( CMRToolkitWizardStep ) :
   def onExit(self, goingTo, transitionType):
     pNode = self.parameterNode()
     
-    if goingTo.id() != 'EndoNVIsosurface':
-      return
+    #if goingTo.id() != 'EndoNVIsosurface':
+    #  return
       
     super(CMRToolkitWizardAntrumCutStep, self).onExit(goingTo, transitionType)
 

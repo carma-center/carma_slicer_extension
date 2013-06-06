@@ -9,7 +9,7 @@ class CMRToolkitWizardAxialDilateStep( CMRToolkitWizardStep ) :
 
   def __init__( self, stepid ):
     self.initialize( stepid )
-    self.setName( '3. Axially dilation of endocardium segmentation' )
+    self.setName( '3. Axial dilation of endocardium segmentation' )
     self.setDescription( 'Generate a new epicardium segmentation label image from the endocardium segmentation previously created.' )
 
     self.__parent = super( CMRToolkitWizardAxialDilateStep, self )
@@ -81,8 +81,8 @@ class CMRToolkitWizardAxialDilateStep( CMRToolkitWizardStep ) :
   def onExit(self, goingTo, transitionType):
     pNode = self.parameterNode()
     
-    if goingTo.id() != 'BooleanRemove':
-      return
+    #if goingTo.id() != 'BooleanRemove':
+    #  return
       
     super(CMRToolkitWizardAxialDilateStep, self).onExit(goingTo, transitionType)
 

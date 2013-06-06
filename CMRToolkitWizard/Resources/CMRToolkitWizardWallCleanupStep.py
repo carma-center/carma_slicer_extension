@@ -77,8 +77,8 @@ class CMRToolkitWizardWallCleanupStep( CMRToolkitWizardStep ) :
   def onExit(self, goingTo, transitionType):    
     pNode = self.parameterNode()
 
-    if goingTo.id() != 'PVAntrumCut':
-      return
+    #if goingTo.id() != 'PVAntrumCut':
+    #  return
     
     ## TODO: Why does this produce an error? 
     #self.editorWidget.exit()

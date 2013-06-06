@@ -73,8 +73,8 @@ class CMRToolkitWizardEndoSegmentationStep( CMRToolkitWizardStep ) :
   ## TODO: Why does the current editor effect continue to the next workflow step?
   def onExit(self, goingTo, transitionType):    
     pNode = self.parameterNode()
-    if goingTo.id() != 'AxialDilate':
-      return
+    #if goingTo.id() != 'AxialDilate':
+    #  return
     
     ## TODO: Why does this produce an error? 
     #self.editorWidget.exit()
