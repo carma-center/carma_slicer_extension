@@ -13,7 +13,7 @@ set(MODULE_TARGET_LIBRARIES
 #-----------------------------------------------------------------------------
 # LA Segmentation Using Graph Cuts Module
 #-----------------------------------------------------------------------------
-set(MODULE_NAME CarmaLASegmentationGraphCuts)
+set(MODULE_NAME CMRToolkitLASegmentationGraphCuts)
 set(MODULE_ADDITIONAL_SRCS ResampleVolume.cxx graph.cpp maxflow.cpp)
 #-----------------------------------------------------------------------------
 

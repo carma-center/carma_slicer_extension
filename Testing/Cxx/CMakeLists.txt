@@ -6,9 +6,9 @@
 
 
  ##############################################################################
- # CarmaAutomaticLeftAtrialScar
+ # CMRToolkitAutomaticLeftAtrialScar
  ##############################################################################
- set(CLP "CarmaAutomaticLeftAtrialScar")
+ set(CLP "CMRToolkitAutomaticLeftAtrialScar")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)
@@ -26,9 +26,9 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
  ##############################################################################
- # CarmaInhomogeneityCorrection
+ # CMRToolkitInhomogeneityCorrection
  ##############################################################################
- set(CLP "CarmaInhomogeneityCorrection")
+ set(CLP "CMRToolkitInhomogeneityCorrection")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)
@@ -46,9 +46,9 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
  ##############################################################################
- # CarmaAxialDilate
+ # CMRToolkitAxialDilate
  ##############################################################################
- set(CLP "CarmaAxialDilate")
+ set(CLP "CMRToolkitAxialDilate")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)
@@ -66,9 +66,9 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
  ##############################################################################
- # CarmaPVAntrumCut
+ # CMRToolkitPVAntrumCut
  ##############################################################################
- set(CLP "CarmaPVAntrumCut")
+ set(CLP "CMRToolkitPVAntrumCut")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)
@@ -86,9 +86,9 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
  ##############################################################################
- # CarmaIsolatedConnectedFilter
+ # CMRToolkitIsolatedConnectedFilter
  ##############################################################################
- set(CLP "CarmaIsolatedConnectedFilter")
+ set(CLP "CMRToolkitIsolatedConnectedFilter")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)
@@ -108,9 +108,9 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
  ##############################################################################
- # CarmaConnectedThresholdFilter
+ # CMRToolkitConnectedThresholdFilter
  ##############################################################################
- set(CLP "CarmaConnectedThresholdFilter")
+ set(CLP "CMRToolkitConnectedThresholdFilter")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)
@@ -131,9 +131,9 @@
  set_property(TEST ${testname} PROPERTY LABELS ${CLP})
 
 ##############################################################################
- # CarmaBooleanREMOVE
+ # CMRToolkitBooleanREMOVE
  ##############################################################################
- set(CLP "CarmaBooleanREMOVEFilter")
+ set(CLP "CMRToolkitBooleanREMOVEFilter")
 
  #-----------------------------------------------------------------------------
  add_executable(${CLP}Test ${CLP}Test.cxx)

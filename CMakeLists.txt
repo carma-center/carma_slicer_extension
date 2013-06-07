@@ -26,7 +26,7 @@ set(MODULE_TARGET_LIBRARIES
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "CarmaInhomogeneityCorrection")
+set(MODULE_NAME "CMRToolkitInhomogeneityCorrection")
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -40,7 +40,7 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "CarmaAxialDilate")
+set(MODULE_NAME "CMRToolkitAxialDilate")
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -54,16 +54,13 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "CarmaRegistration")
+set(MODULE_NAME "CMRToolkitRegistration")
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildScriptedModule(
-  NAME CarmaRegistration
-  SCRIPTS "CarmaRegistration.py"
+  NAME CMRToolkitRegistration
+  SCRIPTS "CMRToolkitRegistration.py"
   RESOURCES ""
-  DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
-  INSTALL_DIR ${Slicer_INSTALL_QTSCRIPTEDMODULES_LIB_DIR}
-  NO_INSTALL_SUBDIR
   )
 
 
@@ -72,7 +69,7 @@ slicerMacroBuildScriptedModule(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME CarmaAutomaticLeftAtrialScar)
+set(MODULE_NAME CMRToolkitAutomaticLeftAtrialScar)
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -86,16 +83,16 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "CarmaRegistrationBRAINSFit")
+set(MODULE_NAME "CMRToolkitRegistrationBRAINSFit")
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildScriptedModule(
-  NAME CarmaRegistrationBRAINSFit
-  SCRIPTS "CarmaRegistrationBRAINSFit.py"
+  NAME CMRToolkitRegistrationBRAINSFit
+  SCRIPTS "CMRToolkitRegistrationBRAINSFit.py"
   RESOURCES ""
-  DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
-  INSTALL_DIR ${Slicer_INSTALL_QTSCRIPTEDMODULES_LIB_DIR}
-  NO_INSTALL_SUBDIR
+  #DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
+  #INSTALL_DIR ${Slicer_INSTALL_QTSCRIPTEDMODULES_LIB_DIR}
+  #NO_INSTALL_SUBDIR
   )
 
 #-----------------------------------------------------------------------------
@@ -103,7 +100,7 @@ slicerMacroBuildScriptedModule(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME CarmaPVAntrumCut)
+set(MODULE_NAME CMRToolkitPVAntrumCut)
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -117,7 +114,7 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME CarmaConnectedThresholdFilter)
+set(MODULE_NAME CMRToolkitConnectedThresholdFilter)
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -131,7 +128,7 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME CarmaIsolatedConnectedFilter)
+set(MODULE_NAME CMRToolkitIsolatedConnectedFilter)
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -145,7 +142,7 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME CarmaBooleanREMOVEFilter)
+set(MODULE_NAME CMRToolkitBooleanREMOVEFilter)
 
 #-----------------------------------------------------------------------------
 SEMMacroBuildCLI(
@@ -157,7 +154,7 @@ SEMMacroBuildCLI(
 #-----------------------------------------------------------------------------
 # Add LA Segmentation Using Graph Cuts Module (In progress)
 #-----------------------------------------------------------------------------
-# add_subdirectory(CarmaLASegmentationGraphCuts)
+# add_subdirectory(CMRToolkitLASegmentationGraphCuts)
 
 #-----------------------------------------------------------------------------
 # Add Cardiac MRI Toolkit Wizard

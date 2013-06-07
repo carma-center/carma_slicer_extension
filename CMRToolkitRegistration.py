@@ -1,10 +1,10 @@
 from __main__ import vtk, qt, ctk, slicer
 
 #
-# CarmaRegistration
+# CMRToolkitRegistration
 #
 
-class CarmaRegistration:
+class CMRToolkitRegistration:
   def __init__(self, parent):
     parent.title = "Cardiac MRI Registration"
     parent.categories = ["Cardiac MRI Toolkit"]
@@ -22,10 +22,10 @@ class CarmaRegistration:
     self.parent = parent
 
 #
-# CarmaRegistrationWidget
+# CMRToolkitRegistrationWidget
 #
 
-class CarmaRegistrationWidget:
+class CMRToolkitRegistrationWidget:
   def __init__(self, parent = None):
     if not parent:
       self.parent = slicer.qMRMLWidget()
@@ -46,7 +46,7 @@ class CarmaRegistrationWidget:
     #  your module to users)
     self.reloadButton = qt.QPushButton("Reload")
     self.reloadButton.toolTip = "Reload this module."
-    self.reloadButton.name = "CarmaRegistration Reload"
+    self.reloadButton.name = "CMRToolkitRegistration Reload"
     self.layout.addWidget(self.reloadButton)
     self.reloadButton.connect('clicked()', self.onReload)
 
@@ -282,7 +282,7 @@ class CarmaRegistrationWidget:
       
 
   def onRegisterButtonClicked(self):
-    print "Performing CARMA registration"
+    print "Performing CMRToolkit registration"
     method = self.presetComboBox.itemText(self.presetComboBox.currentIndex)
     print "method = " + method
 
@@ -325,7 +325,7 @@ class CarmaRegistrationWidget:
     slicer.cli.run( slicer.modules.expertautomatedregistration, None, param, wait_for_completion=True )
     
 
-  def onReload(self,moduleName="CarmaRegistration"):
+  def onReload(self,moduleName="CMRToolkitRegistration"):
     """Generic reload method for any scripted module.
     ModuleWizard will subsitute correct default moduleName.
     """

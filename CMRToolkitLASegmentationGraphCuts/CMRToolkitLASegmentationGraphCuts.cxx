@@ -22,7 +22,7 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkAddImageFilter.h"
-#include "CarmaLASegmentationGraphCutsCLP.h"
+#include "CMRToolkitLASegmentationGraphCutsCLP.h"
 // Include header file for reampling image
 #include "ResampleVolume.h"
 

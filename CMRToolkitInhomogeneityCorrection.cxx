@@ -3,8 +3,8 @@
 
 
 // auto-generated
-#include "CarmaInhomogeneityCorrectionCLP.h"
-#include "CarmaInhomogeneityCorrection.h"
+#include "CMRToolkitInhomogeneityCorrectionCLP.h"
+#include "CMRToolkitInhomogeneityCorrection.h"
 
 #include <itkImage.h>
 #include <itkImageFileReader.h>

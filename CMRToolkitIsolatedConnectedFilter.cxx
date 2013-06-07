@@ -11,7 +11,7 @@
 #endif
 
 #include "itkIsolatedConnectedImageFilter.h"
-#include "CarmaIsolatedConnectedFilterCLP.h"
+#include "CMRToolkitIsolatedConnectedFilterCLP.h"
 #include "itkImage.h"
 #include "itkCastImageFilter.h"
 #include "itkCurvatureFlowImageFilter.h"

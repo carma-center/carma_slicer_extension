@@ -1,9 +1,9 @@
 /*
- *  CarmaPVAntrumCut.cxx
+ *  CMRToolkitPVAntrumCut.cxx
  */
 
-#include "CarmaPVAntrumCutCLP.h"
-#include "CarmaPVAntrumCut.h"
+#include "CMRToolkitPVAntrumCutCLP.h"
+#include "CMRToolkitPVAntrumCut.h"
 
 #include <vector>
 #include <iostream>
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	images.push_back(image2);
 	
 	// Define the type of filter that we use.
-	typedef itk::CarmaPVAntrumCut< InputImageType, InputImageType > filter_type;
+	typedef itk::CMRToolkitPVAntrumCut< InputImageType, InputImageType > filter_type;
 	
 	// Create a new ITK filter instantiation.	
 	filter_type::Pointer filter = filter_type::New();

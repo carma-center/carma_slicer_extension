@@ -10,7 +10,7 @@
 #define ITK_LEAN_AND_MEAN
 #endif
 
-#include "CarmaConnectedThresholdFilterCLP.h"
+#include "CMRToolkitConnectedThresholdFilterCLP.h"
 #include "itkConnectedThresholdImageFilter.h"
 #include "itkImage.h"
 #include "itkCastImageFilter.h"

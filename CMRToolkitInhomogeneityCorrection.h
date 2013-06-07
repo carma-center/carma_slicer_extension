@@ -1,6 +1,6 @@
 
-#ifndef InhomogeneityCorrectionFilter_H
-#define InhomogeneityCorrectionFilter_H
+#ifndef CMRToolkitInhomogeneityCorrectionFilter_H
+#define CMRToolkitInhomogeneityCorrectionFilter_H
 
 // std includes
 #include <algorithm>

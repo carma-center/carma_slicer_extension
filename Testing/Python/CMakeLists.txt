@@ -1,7 +1,7 @@
 
 #-----------------------------------------------------------------------------
 #set(KIT_UNITTEST_SCRIPTS)
-#SlicerMacroConfigureGenericPythonModuleTests("CarmaRegistration" KIT_UNITTEST_SCRIPTS)
+#SlicerMacroConfigureGenericPythonModuleTests("CMRToolkitRegistration" KIT_UNITTEST_SCRIPTS)
 
 #-----------------------------------------------------------------------------
 #foreach(script_name ${KIT_UNITTEST_SCRIPTS})

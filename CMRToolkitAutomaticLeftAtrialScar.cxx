@@ -1,5 +1,5 @@
 /**
- * CarmaAutomaticLeftAtrialScar - automatic scar algorithm.
+ * CMRToolkitAutomaticLeftAtrialScar - automatic scar algorithm.
  * For details see paper: Perry, D. et al. "Automatic classification of scar tissue...".
  *                        Proceedings of SPIE Medical Imaging: Computer Aided Diagnosis. Feb 2012.
  */
@@ -8,7 +8,7 @@
 #include <string>
 
 // auto-generated
-#include "CarmaAutomaticLeftAtrialScarCLP.h"
+#include "CMRToolkitAutomaticLeftAtrialScarCLP.h"
 
 // itk
 #include <itkImage.h>

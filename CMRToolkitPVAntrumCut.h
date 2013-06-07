@@ -1,5 +1,5 @@
-#ifndef _CarmaPVAntrumCut_H
-#define _CarmaPVAntrumCut_H
+#ifndef _CMRToolkitPVAntrumCut_H
+#define _CMRToolkitPVAntrumCut_H
 
 // std includes
 #include <algorithm>
@@ -53,7 +53,7 @@ namespace itk
   };
 
   template <class TInputImage, class TOutputImage=TInputImage>
-  class CarmaPVAntrumCut :
+  class CMRToolkitPVAntrumCut :
     public ImageToImageFilter < TInputImage, TOutputImage >
   {
     public:
@@ -68,7 +68,7 @@ namespace itk
       typedef TOutputImage OutputImageType;
 
       /** Standard class typedefs. */
-      typedef CarmaPVAntrumCut Self;
+      typedef CMRToolkitPVAntrumCut Self;
       typedef ImageToImageFilter< InputImageType, OutputImageType> Superclass;
       typedef SmartPointer<Self> Pointer;
       typedef SmartPointer<const Self> ConstPointer;
@@ -77,7 +77,7 @@ namespace itk
       itkNewMacro(Self);
 
       /** Run-time type information (and related methods). */
-      itkTypeMacro(CarmaPVAntrumCut, ImageToImageFilter);
+      itkTypeMacro(CMRToolkitPVAntrumCut, ImageToImageFilter);
   
       /** Image typedef support. */
       typedef typename InputImageType::PixelType  InputPixelType;
@@ -105,8 +105,8 @@ namespace itk
       }
 
 
-     /** CarmaPVAntrumCut needs a larger input requested region than
-       * the output requested region.  As such, CarmaPVAntrumCut needs
+     /** CMRToolkitPVAntrumCut needs a larger input requested region than
+       * the output requested region.  As such, CMRToolkitPVAntrumCut needs
        * to provide an implementation for GenerateInputRequestedRegion()
        * in order to inform the pipeline execution model.
        *
@@ -125,28 +125,28 @@ namespace itk
 #endif
 
  protected:
-    CarmaPVAntrumCut();
-    virtual ~CarmaPVAntrumCut() {}
+    CMRToolkitPVAntrumCut();
+    virtual ~CMRToolkitPVAntrumCut() {}
 
     void PrintSelf(std::ostream &os, itk::Indent indent) const;
 
     void GenerateData();
 
   private:
-    CarmaPVAntrumCut(const Self&); //purposely not implemented
+    CMRToolkitPVAntrumCut(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
 
     InputSizeType m_FilterRadius;
     InputPixelType m_NoValue;
     OutputPixelType m_InterestPointValue;
     unsigned int m_SliceIndex; // which dimension will iterate over slices
- }; // end class CarmaPVAntrumCut
+ }; // end class CMRToolkitPVAntrumCut
 
   // DEFINITIONS:
 
   template <class TInputImage, class TOutputImage>
-  CarmaPVAntrumCut<TInputImage, TOutputImage>
-  ::CarmaPVAntrumCut()
+  CMRToolkitPVAntrumCut<TInputImage, TOutputImage>
+  ::CMRToolkitPVAntrumCut()
   :m_FilterRadius(),
   m_NoValue(itk::NumericTraits<InputPixelType>::Zero),
   m_InterestPointValue(itk::NumericTraits<OutputPixelType>::Zero + 1),
@@ -563,7 +563,7 @@ namespace itk
 
   template< class TInputImage, class TOutputImage>
   void
-  CarmaPVAntrumCut< TInputImage, TOutputImage>
+  CMRToolkitPVAntrumCut< TInputImage, TOutputImage>
   ::GenerateData()
   {
     // Allocate output
@@ -775,7 +775,7 @@ namespace itk
  
    template <class TInputImage, class TOutputImage>
    void 
-   CarmaPVAntrumCut<TInputImage, TOutputImage>
+   CMRToolkitPVAntrumCut<TInputImage, TOutputImage>
    ::PrintSelf( std::ostream &os, itk::Indent indent ) const
    {
      Superclass::PrintSelf(os, indent);
