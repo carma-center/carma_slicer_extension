@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Cardiac MRI Toolkit</category>
+  <title>Automatic Left Atrial Scar</title>
+  <description><![CDATA[Determine Left Atrial Scar Automatically given the wall segmentation, in a post-ablation LGE-MRI. For details see: Perry, D. et al. "Automatic classification of scar tissue...", Proceedings of SPIE Medical Imaging: Computer Aided Diagnosis, Feb 2012.]]></description>
+  <version>0.1.0</version>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleAutoScar</documentation-url>
+  <license>@MODULE_LICENSE_SHORT_DESCRIPTION@</license>
+  <contributor>Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)</contributor>
+  <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+    <image>
+      <name>lgefn</name>
+      <label>MRI image</label>
+      <channel>input</channel>
+      <index>0</index>
+      <description><![CDATA[post-ablation LGE-MRI]]></description>
+    </image>
+    <image type="label">
+      <name>lawallfn</name>
+      <label>LA wall mask</label>
+      <channel>input</channel>
+      <index>1</index>
+      <description><![CDATA[LA wall (Myocardium) binary mask of the MRI]]></description>
+    </image>
+    <image type="label">
+      <name>laendofn</name>
+      <label>Blood Pool mask</label>
+      <channel>input</channel>
+      <index>2</index>
+      <description><![CDATA[Blood Pool (Endocardium) binary mask of the MRI]]></description>
+    </image>
+    <image type="label">
+      <name>outputfn</name>
+      <label>Result</label>
+      <channel>output</channel>
+      <index>3</index>
+      <description><![CDATA[Mask of post-ablation scar in the LA Wall.]]></description>
+    </image>
+  </parameters>
+</executable>
