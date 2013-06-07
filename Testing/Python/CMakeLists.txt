@@ -25,7 +25,7 @@
 #    Resources/UI/ScenePerformance.ui
     )
 
-# __slicerMacroBuildScriptedModule__(
+# slicerMacroBuildScriptedModule(
 #    TARGET_NAME ApplicationSelfTests
 #    SCRIPTS "${KIT_PYTHON_SCRIPTS}"
 #    RESOURCES "${KIT_PYTHON_RESOURCES}"

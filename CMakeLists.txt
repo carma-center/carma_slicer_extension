@@ -57,8 +57,8 @@ SEMMacroBuildCLI(
 set(MODULE_NAME "CarmaRegistration")
 
 #-----------------------------------------------------------------------------
-__slicerMacroBuildScriptedModule__(
-  TARGET_NAME CarmaRegistration
+slicerMacroBuildScriptedModule(
+  NAME CarmaRegistration
   SCRIPTS "CarmaRegistration.py"
   RESOURCES ""
   DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
@@ -89,8 +89,8 @@ SEMMacroBuildCLI(
 set(MODULE_NAME "CarmaRegistrationBRAINSFit")
 
 #-----------------------------------------------------------------------------
-__slicerMacroBuildScriptedModule__(
-  TARGET_NAME CarmaRegistrationBRAINSFit
+slicerMacroBuildScriptedModule(
+  NAME CarmaRegistrationBRAINSFit
   SCRIPTS "CarmaRegistrationBRAINSFit.py"
   RESOURCES ""
   DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
