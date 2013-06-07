@@ -57,7 +57,7 @@ SEMMacroBuildCLI(
 set(MODULE_NAME "CarmaRegistration")
 
 #-----------------------------------------------------------------------------
-ctkMacroCompilePythonScript(
+__slicerMacroBuildScriptedModule__(
   TARGET_NAME CarmaRegistration
   SCRIPTS "CarmaRegistration.py"
   RESOURCES ""
@@ -82,16 +82,6 @@ SEMMacroBuildCLI(
   )
 
 #-----------------------------------------------------------------------------
-if(BUILD_TESTING)
-  add_subdirectory(Testing)
-endif()
-
-#-----------------------------------------------------------------------------
-if(NOT Slicer_SOURCE_DIR)
-  include(${Slicer_EXTENSION_CPACK})
-endif()
-
-#-----------------------------------------------------------------------------
 # Registration Module using BRAINSFit
 #-----------------------------------------------------------------------------
 
@@ -99,7 +89,7 @@ endif()
 set(MODULE_NAME "CarmaRegistrationBRAINSFit")
 
 #-----------------------------------------------------------------------------
-ctkMacroCompilePythonScript(
+__slicerMacroBuildScriptedModule__(
   TARGET_NAME CarmaRegistrationBRAINSFit
   SCRIPTS "CarmaRegistrationBRAINSFit.py"
   RESOURCES ""
@@ -165,11 +155,21 @@ SEMMacroBuildCLI(
   )
 
 #-----------------------------------------------------------------------------
-# Add LA Segmentation Using Graph Cuts Module
+# Add LA Segmentation Using Graph Cuts Module (In progress)
 #-----------------------------------------------------------------------------
-add_subdirectory(CarmaLASegmentationGraphCuts)
+# add_subdirectory(CarmaLASegmentationGraphCuts)
 
 #-----------------------------------------------------------------------------
 # Add Cardiac MRI Toolkit Wizard
 #-----------------------------------------------------------------------------
 add_subdirectory(CMRToolkitWizard)
+
+#-----------------------------------------------------------------------------
+if(BUILD_TESTING)
+  add_subdirectory(Testing)
+endif()
+
+#-----------------------------------------------------------------------------
+if(NOT Slicer_SOURCE_DIR)
+  include(${Slicer_EXTENSION_CPACK})
+endif()

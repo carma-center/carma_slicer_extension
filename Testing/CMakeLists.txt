@@ -1,2 +1,4 @@
 ADD_SUBDIRECTORY(Cxx)
-#ADD_SUBDIRECTORY(Python)
+#if(Slicer_USE_PYTHONQT)
+#  ADD_SUBDIRECTORY(Python)
+#endif()
