@@ -60,7 +60,7 @@ class CMRToolkitWizardBooleanRemoveStep( CMRToolkitWizardStep ) :
       param['inputVolume1'] = epiSegVolume.GetID()
       param['inputVolume2'] = endoSegVolume.GetID()
       param['outputVolume'] = wallOutputVolume.GetID()
-      slicer.cli.run( slicer.modules.carmabooleanremovefilter, None, param, wait_for_completion=True )
+      slicer.cli.run( slicer.modules. cmrtoolkitbooleanremovefilter, None, param, wait_for_completion=True )
     else:
       qt.QMessageBox.critical(slicer.util.mainWindow(),
                               'Boolean Remove', 'Both epicardial and endocardial segmentation images are required to run Boolean Remove.')

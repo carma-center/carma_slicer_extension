@@ -61,7 +61,7 @@ class CMRToolkitWizardAntrumCutStep( CMRToolkitWizardStep ) :
       param['endoLayer'] = endoSegVolume.GetID()
       param['wallLayer'] = wallCleanupSegVolume.GetID()
       param['endoNoVeins'] = antrumCutOutputVolume.GetID()
-      slicer.cli.run( slicer.modules.carmapvantrumcut, None, param, wait_for_completion=True )
+      slicer.cli.run( slicer.modules.cmrtoolkitpvantrumcut, None, param, wait_for_completion=True )
     else:
       qt.QMessageBox.critical(slicer.util.mainWindow(),
                               'PV Antrum Cut', 'Both endocardial and wall segmentation images are required to run PV Antrum Cut.')

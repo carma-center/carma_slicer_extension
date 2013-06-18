@@ -33,7 +33,7 @@ class CMRToolkitWizardEndoNVIsosurfaceStep( CMRToolkitWizardStep ) :
     #endoSegVolumeID = pNode.GetParameter('endoSegVolumeID')
     #endoSegVolume = Helper.getNodeByID(endoSegVolumeID)
     
-    modelMakerButton = qt.QPushButton('Load Model Maker Module')
+    modelMakerButton = qt.QPushButton('Create isosurface of endocardium')
     self.__layout.addRow(modelMakerButton)
     modelMakerButton.connect('clicked()', self.startModelMaker)
 

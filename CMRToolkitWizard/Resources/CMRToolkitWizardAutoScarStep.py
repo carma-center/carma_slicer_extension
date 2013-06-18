@@ -62,7 +62,7 @@ class CMRToolkitWizardAutoScarStep( CMRToolkitWizardStep ) :
     self.__layout.addRow(autoScarButton)
     autoScarButton.connect('clicked()', self.startAutoScar)
     
-    modelMakerButton = qt.QPushButton('Load Model Maker Module')
+    modelMakerButton = qt.QPushButton('Create isosurface of scar regions')
     self.__layout.addRow(modelMakerButton)
     modelMakerButton.connect('clicked()', self.startModelMaker)
 
@@ -87,7 +87,7 @@ class CMRToolkitWizardAutoScarStep( CMRToolkitWizardStep ) :
       param['lawallfn'] = wallSegVolume.GetID()
       param['laendofn'] = antrumCutVolume.GetID()
       param['outputfn'] = scarOutputVolume.GetID()
-      slicer.cli.run( slicer.modules.carmaautomaticleftatrialscar, None, param, wait_for_completion=True )
+      slicer.cli.run( slicer.modules.cmrtoolkitautomaticleftatrialscar, None, param, wait_for_completion=True )
     else:
       qt.QMessageBox.critical(slicer.util.mainWindow(),
                               'Automatic Left Atrial Scar', 

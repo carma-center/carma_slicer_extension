@@ -54,7 +54,7 @@ class CMRToolkitWizardAxialDilateStep( CMRToolkitWizardStep ) :
       param = {}
       param['targetFileName'] = endoSegVolume.GetID()
       param['outputFileName'] = epiOutputVolume.GetID()
-      slicer.cli.run( slicer.modules.carmaaxialdilate, None, param, wait_for_completion=True )
+      slicer.cli.run( slicer.modules. cmrtoolkitaxialdilate, None, param, wait_for_completion=True )
     else:
       qt.QMessageBox.critical(slicer.util.mainWindow(),
                               'Axial Dilate', 'Output epicardial segmentation image is required to run Axial Dilate.')
