@@ -45,6 +45,7 @@ class CMRToolkitWizardWallCleanupStep( CMRToolkitWizardStep ) :
     global editorWidget 
     self.editorWidget = EditorWidget(parent=self.editorFrame, showVolumesFrame=True)
     self.editorWidget.setup()
+    self.editorWidget.enter()
     ##TODO: How to set the required merge node?
     
     wallCleanupSegLabel = qt.QLabel( 'Final Wall Segmentation Image:' )
@@ -79,10 +80,9 @@ class CMRToolkitWizardWallCleanupStep( CMRToolkitWizardStep ) :
 
     #if goingTo.id() != 'PVAntrumCut':
     #  return
-    
-    ## TODO: Why does this produce an error? 
-    #self.editorWidget.exit()
-    
+
+    self.editorWidget.exit()
+
     super(CMRToolkitWizardWallCleanupStep, self).onExit(goingTo, transitionType) 
 
   def updateParameters(self, parameterNode):

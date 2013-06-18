@@ -39,6 +39,7 @@ class CMRToolkitWizardEndoSegmentationStep( CMRToolkitWizardStep ) :
     global editorWidget 
     self.editorWidget = EditorWidget(parent=self.editorFrame, showVolumesFrame=True)
     self.editorWidget.setup()
+    self.editorWidget.enter()
     
     endoSegLabel = qt.QLabel( 'Endo Segmentation Image:' )
     self.__endoSegSelector = slicer.qMRMLNodeComboBox()
@@ -70,14 +71,12 @@ class CMRToolkitWizardEndoSegmentationStep( CMRToolkitWizardStep ) :
     pNode = self.parameterNode()
     pNode.SetParameter('currentStep', self.stepid)
 
-  ## TODO: Why does the current editor effect continue to the next workflow step?
   def onExit(self, goingTo, transitionType):    
     pNode = self.parameterNode()
     #if goingTo.id() != 'AxialDilate':
     #  return
-    
-    ## TODO: Why does this produce an error? 
-    #self.editorWidget.exit()
+
+    self.editorWidget.exit()
     
     super(CMRToolkitWizardEndoSegmentationStep, self).onExit(goingTo, transitionType) 
   
