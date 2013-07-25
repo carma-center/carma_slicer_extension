@@ -8,7 +8,7 @@ class ThresholdModel:
     parent.title = "Threshold Model"
     parent.categories = ["Cardiac MRI Toolkit"]
     parent.contributors = ["Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"]
-    parent.helpText = """This module is used for thresholding a model of the left atrium of the heart. It requires three inputs:<br>1.A cardiac LGE-MRI image<br>2.The LA endocardium segmentation<br> 3.The LA wall segmentation.<br><br> The final model can be thresholded as required to display regions of fibrosis or scar."""
+    parent.helpText = """This module is used for thresholding a model of the left atrium of the heart. It requires three inputs:<br>1.A cardiac LGE-MRI image<br>2.The LA endocardium segmentation<br> 3.The LA wall segmentation.<br><br> The final model can be thresholded as required to display regions of fibrosis or scar.<br><br>More information about this module can be found at <a href=http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleThresholdModel>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleThresholdModel"""
     parent.acknowledgementText = """ """
     self.parent = parent
 
