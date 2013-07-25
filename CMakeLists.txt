@@ -88,11 +88,8 @@ set(MODULE_NAME "CMRToolkitRegistrationBRAINSFit")
 #-----------------------------------------------------------------------------
 slicerMacroBuildScriptedModule(
   NAME CMRToolkitRegistrationBRAINSFit
-  SCRIPTS "CMRToolkitRegistrationBRAINSFit.py"
+  SCRIPTS "CMRToolkitRegistrationBRAINSFit"
   RESOURCES ""
-  #DESTINATION_DIR ${CMAKE_BINARY_DIR}/${Slicer_QTSCRIPTEDMODULES_LIB_DIR}
-  #INSTALL_DIR ${Slicer_INSTALL_QTSCRIPTEDMODULES_LIB_DIR}
-  #NO_INSTALL_SUBDIR
   )
 
 #-----------------------------------------------------------------------------
@@ -152,9 +149,23 @@ SEMMacroBuildCLI(
   )
 
 #-----------------------------------------------------------------------------
+# Threshold Model Module
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "ThresholdModel")
+
+#-----------------------------------------------------------------------------
+slicerMacroBuildScriptedModule(
+  NAME ThresholdModel
+  SCRIPTS "ThresholdModel"
+  RESOURCES ""
+  )
+
+#-----------------------------------------------------------------------------
 # Add LA Segmentation Using Graph Cuts Module (In progress)
 #-----------------------------------------------------------------------------
-# add_subdirectory(CMRToolkitLASegmentationGraphCuts)
+#add_subdirectory(CMRToolkitLASegmentationGraphCuts)
 
 #-----------------------------------------------------------------------------
 # Add Cardiac MRI Toolkit Wizard
