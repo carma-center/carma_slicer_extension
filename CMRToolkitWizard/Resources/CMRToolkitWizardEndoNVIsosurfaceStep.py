@@ -14,6 +14,12 @@ class CMRToolkitWizardEndoNVIsosurfaceStep( CMRToolkitWizardStep ) :
 
     self.__parent = super( CMRToolkitWizardEndoNVIsosurfaceStep, self )
 
+  def killButton(self):
+    # Hide unneccesary button
+    bl = slicer.util.findChildren(text='AutomaticLeft*')
+    if len(bl):
+      bl[0].hide()
+
   def createUserInterface( self ):
     '''
     '''
@@ -85,6 +91,8 @@ class CMRToolkitWizardEndoNVIsosurfaceStep( CMRToolkitWizardStep ) :
     global pNode 
     pNode = self.parameterNode()
     pNode.SetParameter('currentStep', self.stepid)
+    
+    qt.QTimer.singleShot(0, self.killButton)
 
   def onExit(self, goingTo, transitionType):
     pNode = self.parameterNode()

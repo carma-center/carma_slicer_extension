@@ -13,6 +13,12 @@ class CMRToolkitWizardWallCleanupStep( CMRToolkitWizardStep ) :
 
     self.__parent = super( CMRToolkitWizardWallCleanupStep, self )
 
+  def killButton(self):
+    # Hide unneccesary button
+    bl = slicer.util.findChildren(text='AutomaticLeft*')
+    if len(bl):
+      bl[0].hide()
+
   def createUserInterface( self ):
     from Editor import EditorWidget
     
@@ -56,6 +62,9 @@ class CMRToolkitWizardWallCleanupStep( CMRToolkitWizardStep ) :
     self.__wallCleanupSegSelector.addEnabled = 0
     self.__layout.addRow( wallCleanupSegLabel, self.__wallCleanupSegSelector )
 
+    # Hide unnecessary button
+    findChildren( text = 'AutomaticLeft*')[0].hide()
+
   def validate( self, desiredBranchId ):
     self.__parent.validate( desiredBranchId )
     wallCleanupSegVolume = self.__wallCleanupSegSelector.currentNode()
@@ -73,6 +82,8 @@ class CMRToolkitWizardWallCleanupStep( CMRToolkitWizardStep ) :
     super(CMRToolkitWizardWallCleanupStep, self).onEntry(comingFrom, transitionType)
     pNode = self.parameterNode()
     pNode.SetParameter('currentStep', self.stepid)
+    
+    qt.QTimer.singleShot(0, self.killButton)
 
   ## TODO: Why does editor effect continue to the next workflow step?
   def onExit(self, goingTo, transitionType):    
