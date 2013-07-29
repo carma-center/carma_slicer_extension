@@ -2,11 +2,11 @@
 <executable>
     <category>Cardiac MRI Toolkit</category> 
     <title>LA Segmentation Using Graph Cuts</title>
-    <description>This module implements an algorithm to automatically segment out the Left Atrium from an LGE-MRI image volume.</description>
+    <description>This module implements an algorithm to automatically segment out the left atrium from a cardiac LGE-MRI image volume. IMPORTANT: Model data must be downloaded in order to run this module. The data can be downloaded from:<![CDATA[<a href="http://slicer.kitware.com/midas3/folder/1550">http://slicer.kitware.com/midas3/folder/1550</a>]]> </description>
     <version>0.1.0</version>
-    <documentation-url></documentation-url>
+    <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleAutomatedLASegmentation</documentation-url>
     <license>Slicer</license>
-    <contributor>Gopal Veni, Salma Bengali, Greg Gardner, Alan Morris, Josh Cates, Rob MacLeod, Ross Whitaker</contributor>
+    <contributor>Gopal Veni, Salma Bengali, Alan Morris, Josh Cates, Rob MacLeod, Ross Whitaker</contributor>
     <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
     <parameters>
         <label>IO</label>
@@ -24,15 +24,15 @@
             <index>1</index>
             <channel>input</channel>
             <constraints>
-                <minimum> 4 </minimum>
+                <minimum> 1 </minimum>
                 <maximum> 10 </maximum>
                 <step> 1 </step>
             </constraints>
-            <description><![CDATA[Smoothness constraint for a surface (range 4-10)]]></description>
+            <description><![CDATA[Smoothness constraint for a surface. A lower value will result in a smoother output segmentation.]]></description>
         </integer>
         <integer>
             <name>MdlOption</name>
-            <label>Model Number Parameter</label>
+            <label>Model Number</label>
             <index>2</index>
             <channel>input</channel>
             <constraints>
@@ -40,56 +40,49 @@
                 <maximum> 4 </maximum>
                 <step> 1 </step>
             </constraints>
-            <description><![CDATA[Selection of model number]]></description>
+            <description><![CDATA[Select the model number to be used. Model can be arbitrarily selected and can be changed to check changes in the output.]]></description>
         </integer>
-        <image type="label">
-            <name>outputImage</name>
-            <label>Output Image</label>
-            <index>3</index>
-            <channel>output</channel>
-            <description><![CDATA[The segmented output image volume]]></description>
-        </image>
         <directory>
             <name>inputDataDirectory</name>
             <label>Model Data Directory</label>
-            <index>4</index>
+            <index>3</index>
             <channel>input</channel>
-            <description><![CDATA[The directory from which to import a specific model's data]]></description>
+            <description><![CDATA[The directory from which to import a specific model's data. Model data must be downloaded. See 'Help' tab for details. Directory must match the selected model number.]]></description>
         </directory> 
-	<geometry fileExtensions=".vtk">
-            <name>epiMesh</name>
-            <label>Epi Mesh</label>
+        <point>
+            <name>centerOfLA</name>
+            <label>Center of Left Atrium</label>
+            <longflag>centerOfLA</longflag>
+            <channel>input</channel>
+            <description><![CDATA[Select the approximate center of the LA by placing a fiducial.]]></description>
+        </point>
+        <image type="label">
+            <name>outputEndoImage</name>
+            <label>Output Endo Label Image</label>
+            <index>4</index>
+            <channel>output</channel>
+            <description><![CDATA[The segmented output endocardium label volume]]></description>
+        </image>
+        <image type="label">
+            <name>outputEpiImage</name>
+            <label>Output Epi Label Image</label>
             <index>5</index>
             <channel>output</channel>
-            <description><![CDATA[The output epi mesh]]></description>
-	</geometry>
-	<geometry fileExtensions=".vtk">
+            <description><![CDATA[The segmented output epicardium label volume]]></description>
+        </image>
+        <geometry fileExtensions=".vtk">
             <name>endoMesh</name>
             <label>Endo Mesh</label>
             <index>6</index>
             <channel>output</channel>
-            <description><![CDATA[The output endo mesh]]></description>
-	</geometry>
-        <float>
-            <name>row</name>
-            <label>Row</label>
+            <description><![CDATA[The output endocardium mesh]]></description>
+        </geometry>
+        <geometry fileExtensions=".vtk">
+            <name>epiMesh</name>
+            <label>Epi Mesh</label>
             <index>7</index>
-            <channel>input</channel>
-            <description><![CDATA[Manually select the center of mass of the LA and enter the row]]></description>
-        </float>
-        <float>
-            <name>column</name>
-            <label>Column</label>
-            <index>8</index>
-            <channel>input</channel>
-            <description><![CDATA[Manually select the center of mass of the LA and enter the column]]></description>
-        </float>
-        <float>
-            <name>slice</name>
-            <label>Slice</label>
-            <index>9</index>
-            <channel>input</channel>
-            <description><![CDATA[Manually select the center of mass of the LA and enter the slice]]></description>
-        </float>
+            <channel>output</channel>
+            <description><![CDATA[The output epicardium mesh]]></description>
+        </geometry>
     </parameters>
 </executable>
