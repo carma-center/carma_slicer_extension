@@ -1,4 +1,4 @@
-// This code does graph cuts based on Vnet strategy, with intensity profiles as their cost functions
+// This code performs graph cuts based on Vnet strategy, with intensity profiles as the cost functions
 
 #if defined(_MSC_VER)
 #pragma warning ( disable : 4786 )
@@ -16,6 +16,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <numeric>
 
 #include "graph.h"
 #include "itkImage.h"
@@ -23,8 +24,25 @@
 #include "itkImageFileWriter.h"
 #include "itkAddImageFilter.h"
 #include "CMRToolkitLASegmentationGraphCutsCLP.h"
-// Include header file for reampling image
+// Include header file for resampling image
 #include "ResampleVolume.h"
+
+#include "vtkSmartPointer.h"
+#include "vtkPoints.h"
+#include "vtkPolygon.h"
+#include "vtkPolyData.h"
+#include "vtkCellArray.h"
+#include "vtkPolyDataWriter.h"
+#include "vtkPolyDataNormals.h"
+#include "vtkPolyDataPointSampler.h"
+
+#include "itkBinaryBallStructuringElement.h"
+#include "itkBinaryErodeImageFilter.h"
+#include "itkBinaryDilateImageFilter.h"
+#include "itkBinaryThresholdImageFunction.h"
+#include "itkFloodFilledImageFunctionConditionalIterator.h"
+#include "itkImageFileWriter.h"
+#include "itkPluginUtilities.h"
 
 using namespace std;
 
@@ -35,9 +53,10 @@ typedef itk::Image< int, DATA_DMN > ImageTypeidx;
 typedef itk::Image< float,DATA_DMN > ImageType;
 typedef itk::Image< unsigned char,DATA_DMN > ImageType3;
 typedef itk::ImageFileReader<ImageType> ReaderType;
-typedef itk::ImageFileWriter<ImageType> WriterType;
+typedef itk::ImageFileWriter<ImageType3> WriterType;
 typedef itk::AddImageFilter< ImageType, ImageType > AddImageFilterType;
 typedef vector<float> vec1f;
+typedef itk::Image<unsigned char, 3> LabelImageType;
 
 #define sec_dim 25
 #define stk_len 11
@@ -55,21 +74,20 @@ void Mconnectmat( int** Nnbor_mat, int** nbor_mat, int& nop );
 float interpolator( float* stk_index, ImageType::Pointer Image );
 float dotprod( float* Mstk, float* Tstk );
 void readstkmatrix( float** &stkglmatrix, std::ifstream &stkintFile, int& nop, int &numel );
-void finalmesh(float*** &Coormat, int **&Segbdrymat, float** &segmesh, std::vector< std::vector<int> >& matrix, 
+vtkPolyData* finalmesh(float*** &Coormat, int **&Segbdrymat, float** &segmesh, std::vector< std::vector<int> >& matrix, 
            int& Mlayers, int& nop, int& sz, std::string opmeshfile, vec1f& input_origin);
+void modelToLabelMap( ImageType::ConstPointer image, vtkPolyData* polydata, std::string outputImageFile );
+LabelImageType::Pointer BinaryErodeFilter3D( LabelImageType::Pointer & img, unsigned int ballsize );
+LabelImageType::Pointer BinaryDilateFilter3D( LabelImageType::Pointer & img, unsigned int ballsize );
+LabelImageType::Pointer BinaryOpeningFilter3D( LabelImageType::Pointer & img, unsigned int ballsize );
+LabelImageType::Pointer BinaryClosingFilter3D( LabelImageType::Pointer & img, unsigned int ballsize );
+itk::Point<float, 3> convertStdVectorToITKPoint(const std::vector<float> & vec);
 
 int main(int argc, char *argv[])
 {
     PARSE_ARGS;
 		
-
-
-    /*if(argc < 4){
-        std::cerr << "Usage: " << std::std::endl;
-        std::cerr << argv[0] << " InputImage" << " OutputImageFilename" << "SmoothnessParameter" << std::endl;
-        return EXIT_FAILURE;
-    }*/
-    std::string image1, image2, Coorfile, stkglfile, stkidxfile, opmeshfile1, opmeshfile2;
+    std::string Coorfile, stkglfile, stkidxfile, opmeshfile1, opmeshfile2;
     //int DELTAS = atoi(argv[3]);
     int DELTAS = deltaS;
     int MDL_OPTION = MdlOption; // model selection
@@ -79,40 +97,50 @@ int main(int argc, char *argv[])
     model_option << MDL_OPTION;
     model_option_str = model_option.str();
     vec1f RealCOM(3,0);
-    RealCOM[0] = row;
-    RealCOM[1] = column;
-    RealCOM[2] = slice;
+		
+		ImageType::PointType center_of_LA;
+		ImageType::IndexType center_index;
+		
     vec1f MeanCOM(3,0);
     // Model's center of mass
     MeanCOM[0] = 202.088;
     MeanCOM[1] = 205.65;
     MeanCOM[2] = 57.4859;
 
-    int no_vertices;
+    int no_vertices = 0;
     if (MDL_OPTION == 1){
         no_vertices = 12027; // for atrium data cluster 1
     }else if (MDL_OPTION == 2){
-        no_vertices = 16087;// for atrium data cluster 3
+        no_vertices = 16087;// for atrium data cluster 2
     }else if (MDL_OPTION == 3){
-      no_vertices = 16913; // for atrium data cluster 4
+      no_vertices = 16913; // for atrium data cluster 3
     }else if(MDL_OPTION == 4){
-        no_vertices = 14747; // for atrium data cluster 5
+        no_vertices = 14747; // for atrium data cluster 4
 
         // AKM: overriding!
         no_vertices = 16913; // for atrium data cluster 4
     }
 
-    image1 = argv[1];
-    image2 = argv[2];
+    //inputImage = argv[1];
+    //outputImage = argv[2];
     opmeshfile1 = epiMesh;
     opmeshfile2 = endoMesh;
 
     // reading input image
     ReaderType::Pointer reader = ReaderType::New();
-    reader -> SetFileName(inputImage);
-    reader ->Update();
+    reader->SetFileName(inputImage);
+    reader->Update();
     ImageType::ConstPointer ipimage = reader->GetOutput();
 
+		// Convert point lists to ITK points and convert RAS -> LPS		
+		center_of_LA = convertStdVectorToITKPoint( centerOfLA );	
+		
+		ipimage->TransformPhysicalPointToIndex( center_of_LA, center_index );
+		
+		RealCOM[0] = center_index[0];
+		RealCOM[1] = center_index[1];
+		RealCOM[2] = center_index[2];
+		
     // Get input image pixel spacing and origin
     const ImageType::SpacingType& inputspacing = ipimage->GetSpacing();
     vec1f ipspacing(3,0);
@@ -129,9 +157,9 @@ int main(int argc, char *argv[])
     // Resampling image to isotropic pixel size
     ImageType::Pointer ResampledImage = ResampleVolumeToBe1Spacing(ipimage,ipspacing,isospacing);
     // Get Height and Width of resampled image
-    int SZ0 = ResampledImage -> GetLargestPossibleRegion().GetSize()[0];
-    int SZ1 = ResampledImage -> GetLargestPossibleRegion().GetSize()[1];
-    int SZ2 = ResampledImage -> GetLargestPossibleRegion().GetSize()[2];
+    //int SZ0 = ResampledImage -> GetLargestPossibleRegion().GetSize()[0];
+    //int SZ1 = ResampledImage -> GetLargestPossibleRegion().GetSize()[1];
+    //int SZ2 = ResampledImage -> GetLargestPossibleRegion().GetSize()[2];
 
     // Modify the centroid with respect to the resampled image
     vec1f Centroid(3,0);
@@ -140,9 +168,9 @@ int main(int argc, char *argv[])
     Centroid[2] = RealCOM[2] * inputspacing[2] / isospacing[2];
     cout << "Left Atrium center in resampled image: " << Centroid[0] << " " << Centroid[1] << " " << Centroid[2] << "\n";
 
-    //    file indices
+    //file indices
     std::string model_dir = inputDataDirectory;
-    std::cerr << model_dir << std::endl;
+    
     std::string Cooridx[] = {"1_18_twin","1_17_twin","1_16_twin","1_15_twin",
                         "1_14_twin","1_13_twin","1_12_twin","1_11_twin",
                         "1_10_twin","1_9_twin","1_8_twin","1_7_twin","1_6_twin",
@@ -397,7 +425,7 @@ int main(int argc, char *argv[])
             float corr1 = dotprod(Mstk1,Tstk1);
             float corr2 = dotprod(Mstk2,Tstk2);
 
-    //              for graph-cuts, we need cost value opposite to correlation
+    // for graph-cuts, we need cost value opposite to correlation
             float cost1,cost2;
             cost1 = -(corr1*1E4); // "without scaling, the code gives VOID results" (debugged on 7/19/2012)
             cost2 = -(corr2*1E4);
@@ -619,109 +647,16 @@ int main(int argc, char *argv[])
         segmesh2[i] = new float[3];
     }
 
-    finalmesh(Coormat1, Segbdrymat1, segmesh1, matrix, Mlayers, nop, sz, opmeshfile1, iporigin);
-    finalmesh(Coormat2, Segbdrymat2, segmesh2, matrix, Mlayers, nop, sz, opmeshfile2, iporigin);
-
-    // writer initialization
-    ImageType::Pointer writerip1 = ImageType::New();
-    ImageType::Pointer writerip2 = ImageType::New();
-
-    ImageType3::IndexType writer_start;
-    writer_start[0] = 0;
-    writer_start[1] = 0;
-    writer_start[2] = 0;
-    ImageType3::SizeType writer_size;
-    writer_size[0] = SZ0;
-    writer_size[1] = SZ1;
-    writer_size[2] = SZ2;
-    ImageType3::RegionType writer_region;
-    writer_region.SetSize(writer_size);
-    writer_region.SetIndex(writer_start);
-
-    writerip1->SetRegions(writer_region);
-    writerip1->Allocate();
-    writerip2->SetRegions(writer_region);
-    writerip2->Allocate();
-
-    // Binary segmentation with respect to node assignment
-    ImageType3::IndexType opvoxelIndex;
-    ImageType::PixelType opvoxelValue;
-
-    // initialize all values to zero
-    for (int m = 0; m < SZ0; m++){
-        for (int n = 0; n < SZ1; n++){
-            for (int p = 0; p < SZ2; p++){
-               opvoxelIndex[0] = m;
-               opvoxelIndex[1] = n;
-               opvoxelIndex[2] = p;
-               opvoxelValue = 0;
-               writerip1 -> SetPixel(opvoxelIndex, opvoxelValue);
-               writerip2 -> SetPixel(opvoxelIndex, opvoxelValue);
-            }
-        }
-    }
-
-    // for surface 1
-    for (int m = 0; m < Mlayers; m++){
-        for (int n = 0; n < nop; n++){
-            // for surface 1
-            opvoxelIndex[0] = floor(Coormat1[m][n][0] + 0.5);
-            opvoxelIndex[1] = floor(Coormat1[m][n][1] + 0.5);
-            opvoxelIndex[2] = floor(Coormat1[m][n][2] + 0.5);
-    //         if ( g -> what_segment(m*nop + n) == GraphType::SOURCE  ){
-            if ( Segbdrymat1[m][n] == -150 ){
-                opvoxelValue = 1;
-             }
-            else{
-                opvoxelValue = 0;
-            }
-            writerip1 -> SetPixel(opvoxelIndex,opvoxelValue);
-        }
-     }
-
-     // for surface 2
-     for (int m = 0; m < Mlayers; m++){
-        for (int n = 0; n < nop; n++){
-            // for surface 2
-            opvoxelIndex[0] = floor(Coormat2[m][n][0] + 0.5);
-            opvoxelIndex[1] = floor(Coormat2[m][n][1] + 0.5);
-            opvoxelIndex[2] = floor(Coormat2[m][n][2] + 0.5);
-    //         if ( g -> what_segment(m*nop + n) == GraphType::SOURCE  ){
-            if ( Segbdrymat2[m][n] == -150 ){
-                opvoxelValue = 2;
-             }
-            else{
-                opvoxelValue = 0;
-            }
-            writerip2 -> SetPixel(opvoxelIndex,opvoxelValue);
-        }
-     }
-
-    AddImageFilterType::Pointer writerip = AddImageFilterType::New();
-    // adding two subgraphs
-    writerip -> SetInput1(writerip1);
-    writerip -> SetInput2(writerip2);
-    writerip -> Update();
-    ImageType::ConstPointer Adder = writerip->GetOutput();
-
-    ImageType::Pointer InvResampledImage= ResampleVolumeToBe1Spacing(Adder, isospacing, ipspacing);
-    InvResampledImage->SetOrigin(ipimage->GetOrigin());
-    WriterType::Pointer writer = WriterType::New();
-    writer -> SetFileName(outputImage);
-    writer -> SetInput(InvResampledImage);
-    writer -> Update();
-
-//    try
-//    {
-//        writerip -> Update();
-//        writer -> Update();
-//    }
-//    catch( itk::ExceptionObject & excep )
-//    {
-//        std::cerr << "Exception caught !" << std::endl;
-//        std::cerr << excep << std::endl;
-//        return EXIT_FAILURE;
-//    }
+    vtkPolyData *epiMeshPolyData;
+		epiMeshPolyData = finalmesh(Coormat1, Segbdrymat1, segmesh1, matrix, Mlayers, nop, sz, opmeshfile1, iporigin);
+		//vtkSmartPointer<vtkMRMLModelNode> epiNode = vtkSmartPointer<vtkMRMLModelNode>::New();
+		//epiNode->SetAndObservePolyData( epiMeshPolyData );
+		
+    vtkPolyData *endoMeshPolyData; 
+		endoMeshPolyData = finalmesh(Coormat2, Segbdrymat2, segmesh2, matrix, Mlayers, nop, sz, opmeshfile2, iporigin);
+		
+		modelToLabelMap( ipimage, endoMeshPolyData, outputEndoImage );
+		modelToLabelMap( ipimage, epiMeshPolyData, outputEpiImage );		
 
     delete g; // deleting graph pointer
     return EXIT_SUCCESS;
@@ -805,24 +740,13 @@ void connectmat(std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat)
         }
       }
    }
-  }
- /*
-  // Display connectivity matrix
-  for (int i = 0; i<sz;i++){
-     for (int j =0; j<noc; j++){
-       std::cout<<nbor_mat[i][j]<<" ";
-     }
-    std::cout<<"\n";
-  }
-  //*/
-	
-	
+  }	
 }
 
 // Reading point files
 void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM)
 {
-		std::cerr << "in readCmatrix" << std::endl;
+		//std::cerr << "in readCmatrix" << std::endl;
     int v_no = 0;
     while(!myfile.eof()){
         std::string line;
@@ -846,7 +770,7 @@ void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCO
 
 // stick matrix
 void readstkmatrix(float** &stkglmatrix, std::ifstream &stkintFile, int& nop, int& numel){
-		std::cerr << "in readstkmatrix" << std::endl;
+		//std::cerr << "in readstkmatrix" << std::endl;
     for(int n = 0; n < nop; n++){
         std::string line;
         getline(stkintFile,line);
@@ -1006,34 +930,255 @@ float dotprod(float *Mstk, float *Tstk){
 
 }
 
-void finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, vector<vector<int> > &matrix, 
+vtkPolyData* finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, vector<vector<int> > &matrix, 
            int &Mlayers, int &nop, int &sz, std::string opmeshfile, vec1f& input_origin){
-    ofstream outdata;
-    outdata.open(opmeshfile.c_str());
-    if ( !outdata ){
+		//std::cout << "finalmesh function" << std::endl;
+    //ofstream outdata;
+    //outdata.open(opmeshfile.c_str());
+		//outdata.open("epi_outdata.vtk");
+    /*if ( !outdata ){
         cerr << "Error: file could not be opened" << endl;
         return;
-    }
+    }*/
 
-    outdata << "# vtk DataFile Version 3.0\nOriginal surfacemesh\nASCII\nDATASET POLYDATA\nPOINTS " << nop << " float" << "\n";
+    //outdata << "# vtk DataFile Version 3.0\nOriginal surfacemesh\nASCII\nDATASET POLYDATA\nPOINTS " << nop << " float" << "\n";
+		
+		// SB: Write the points to a VTK data structure
+		vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
     for (int n = 0; n < nop; n++){
         for (int m = 0; m < Mlayers; m++){
             if (Segbdrymat[m][n] == -150){                
                 segmesh[n][0] = -Coormat[m][n][0] - input_origin[0];
                 segmesh[n][1] = -Coormat[m][n][1] - input_origin[1];
                 segmesh[n][2] = +Coormat[m][n][2] + input_origin[2];
-                outdata << segmesh[n][0] << " " << segmesh[n][1] << " " << segmesh[n][2] << "\n";
+								points->InsertNextPoint( segmesh[n][0], segmesh[n][1], segmesh[n][2] );
+                //outdata << segmesh[n][0] << " " << segmesh[n][1] << " " << segmesh[n][2] << "\n";
             }
         }
     }
-
-    outdata << "POLYGONS " << sz << " " << 4*sz << "\n";
+		
+		// SB: Write the polygons to a VTK data structure
+		vtkSmartPointer<vtkCellArray> polygon_array = vtkSmartPointer<vtkCellArray>::New();
+    //outdata << "POLYGONS " << sz << " " << 4*sz << "\n";
     for (unsigned int t = 0; t < matrix.size() - 1; t++){
-        outdata << 3;
+				vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+        polygon->GetPointIds()->SetNumberOfIds( 3 );
+        //outdata << 3;
         for (unsigned int u = 0; u < matrix[t].size(); u++){
-            outdata << " " << matrix[t][u]-1;
+						int val = matrix[t][u] - 1;
+						polygon->GetPointIds()->SetId( u, val );
+            //outdata << " " << matrix[t][u]-1;
         }
-        outdata << "\n";
+				polygon_array->InsertNextCell(polygon);
+        //outdata << "\n";
     }
-    outdata.close();
+		//outdata.close();
+		vtkSmartPointer<vtkPolyData> meshPolyData = vtkSmartPointer<vtkPolyData>::New();
+    meshPolyData->SetPoints( points );
+    meshPolyData->SetPolys( polygon_array );
+    
+		// SB: Calculate the mesh normals
+    vtkSmartPointer<vtkPolyDataNormals> meshNormals = vtkSmartPointer<vtkPolyDataNormals>::New();
+    meshNormals->SetInput( meshPolyData );
+    meshNormals->FlipNormalsOn();
+    //meshNormals->SetFeatureAngle( 60.0 );
+    //meshNormals->ComputeCellNormalsOn();
+    //meshNormals->ComputePointNormalsOff();
+    meshNormals->Update();
+    
+		// SB: Write the final mesh to a file
+    vtkPolyDataWriter* writer = vtkPolyDataWriter::New();
+    writer->SetFileName(opmeshfile.c_str());
+    writer->SetInputConnection(meshNormals->GetOutputPort());
+    writer->Write();
+		
+		vtkSmartPointer<vtkPolyData> polyData = vtkSmartPointer<vtkPolyData>::New();
+		polyData = meshNormals->GetOutput();
+		return polyData;
+}
+
+void modelToLabelMap( ImageType::ConstPointer image, vtkPolyData* polyDataFile, std::string outputImageFile )
+{	
+	LabelImageType::Pointer label = LabelImageType::New();
+  label->CopyInformation( image );
+  label->SetRegions( label->GetLargestPossibleRegion() );
+  label->Allocate();
+  label->FillBuffer( 0 );
+	
+  // read the poly data
+  //vtkSmartPointer<vtkPolyData> polyDataFile;
+  //vtkSmartPointer<vtkPolyDataReader> pdReader;
+  //vtkSmartPointer<vtkXMLPolyDataReader> pdxReader;
+	
+	/*pdReader = vtkSmartPointer<vtkPolyDataReader>::New();
+  pdReader->SetFileName( polyDataFile.c_str() );
+  pdReader->Update();
+  polyData = pdReader->GetOutput();*/
+	
+	if( polyDataFile == NULL )
+	{
+    std::cerr << "Failed to read model " << std::endl;
+    return;
+	}
+	
+  // LPS vs RAS
+	
+  vtkPoints * allPoints = polyDataFile->GetPoints();
+  for( int k = 0; k < allPoints->GetNumberOfPoints(); k++ )
+	{
+    double* point = polyDataFile->GetPoint( k );
+    point[0] = -point[0];
+    point[1] = -point[1];
+    allPoints->SetPoint( k, point[0], point[1], point[2] );
+	}
+	
+  // do it
+  vtkSmartPointer<vtkPolyDataPointSampler> sampler = vtkSmartPointer<vtkPolyDataPointSampler>::New();
+	
+  sampler->SetInput( polyDataFile );
+  sampler->SetDistance( 0.5 );
+  sampler->GenerateEdgePointsOn();
+  sampler->GenerateInteriorPointsOn();
+  sampler->GenerateVertexPointsOn();
+  sampler->Update();
+	
+  //std::cout << polyData->GetNumberOfPoints() << std::endl;
+  //std::cout << sampler->GetOutput()->GetNumberOfPoints() << std::endl;
+  for( int k = 0; k < sampler->GetOutput()->GetNumberOfPoints(); k++ )
+	{
+    double * pt = sampler->GetOutput()->GetPoint( k );
+    LabelImageType::PointType pitk;
+    pitk[0] = pt[0];
+    pitk[1] = pt[1];
+    pitk[2] = pt[2];
+    LabelImageType::IndexType idx;
+    label->TransformPhysicalPointToIndex( pitk, idx );
+		
+    if( label->GetLargestPossibleRegion().IsInside(idx) )
+		{
+      label->SetPixel( idx, 255 );
+		}
+	}
+	
+  // do morphological closing
+  LabelImageType::Pointer closedLabel = BinaryClosingFilter3D( label, 2);
+  itk::ImageRegionIteratorWithIndex<LabelImageType> itLabel(closedLabel, closedLabel->GetLargestPossibleRegion() );
+	
+  // do flood fill using binary threshold image function
+  typedef itk::BinaryThresholdImageFunction<LabelImageType> ImageFunctionType;
+  ImageFunctionType::Pointer func = ImageFunctionType::New();
+  func->SetInputImage( closedLabel );
+  func->ThresholdBelow(1);
+	
+  LabelImageType::IndexType idx;
+  LabelImageType::PointType COG;
+	
+  // set the centre of gravity
+  // double *bounds = polyData->GetBounds();
+  COG.Fill(0.0);
+  for( vtkIdType k = 0; k < polyDataFile->GetNumberOfPoints(); k++ )
+	{
+    double *pt = polyDataFile->GetPoint( k );
+    for( int m = 0; m < 3; m++ )
+		{
+      COG[m] += pt[m];
+		}
+	}
+  for( int m = 0; m < 3; m++ )
+	{
+    COG[m] /= static_cast<float>( polyDataFile->GetNumberOfPoints() );
+	}
+	
+  label->TransformPhysicalPointToIndex( COG, idx );
+	
+  itk::FloodFilledImageFunctionConditionalIterator<LabelImageType, ImageFunctionType> floodFill( closedLabel, func, idx );
+  for( floodFill.GoToBegin(); !floodFill.IsAtEnd(); ++floodFill )
+	{
+    LabelImageType::IndexType i = floodFill.GetIndex();
+    closedLabel->SetPixel( i, 255 );
+	}
+  LabelImageType::Pointer finalLabel = BinaryClosingFilter3D( closedLabel, 2);
+  for( itLabel.GoToBegin(); !itLabel.IsAtEnd(); ++itLabel )
+	{
+    LabelImageType::IndexType i = itLabel.GetIndex();
+    label->SetPixel( i, finalLabel->GetPixel(i) );
+	}
+	
+	WriterType::Pointer writer = WriterType::New();
+  //itk::PluginFilterWatcher watchWriter(writer, "Write Volume", CLPProcessInformation);
+  writer->SetFileName( outputImageFile );
+  writer->SetInput( label );
+  writer->SetUseCompression(1);
+  writer->Update();
+}
+
+LabelImageType::Pointer BinaryErodeFilter3D( LabelImageType::Pointer & img, unsigned int ballsize )
+{
+  typedef itk::BinaryBallStructuringElement<unsigned char, 3> KernalType;
+  typedef itk::BinaryErodeImageFilter<LabelImageType, LabelImageType, KernalType> ErodeFilterType;
+  ErodeFilterType::Pointer erodeFilter = ErodeFilterType::New();
+  erodeFilter->SetInput( img );
+
+  KernalType ball;
+  KernalType::SizeType ballSize;
+	
+  for( int k = 0; k < 3; k++ )
+	{
+    ballSize[k] = ballsize;
+	}
+	
+  ball.SetRadius(ballSize);
+  ball.CreateStructuringElement();
+  erodeFilter->SetKernel( ball );
+  erodeFilter->Update();
+  return erodeFilter->GetOutput();
+}
+
+LabelImageType::Pointer BinaryDilateFilter3D( LabelImageType::Pointer & img, unsigned int ballsize )
+{
+  typedef itk::BinaryBallStructuringElement<unsigned char, 3> KernalType;
+  typedef itk::BinaryDilateImageFilter<LabelImageType, LabelImageType, KernalType> DilateFilterType;
+  DilateFilterType::Pointer dilateFilter = DilateFilterType::New();
+  dilateFilter->SetInput( img );
+  KernalType ball;
+  KernalType::SizeType ballSize;
+	
+  for( int k = 0; k < 3; k++ )
+	{
+    ballSize[k] = ballsize;
+	}
+	
+  ball.SetRadius(ballSize);
+  ball.CreateStructuringElement();
+  dilateFilter->SetKernel( ball );
+  dilateFilter->Update();
+  return dilateFilter->GetOutput();
+}
+
+LabelImageType::Pointer BinaryOpeningFilter3D( LabelImageType::Pointer & img, unsigned int ballsize )
+{
+  LabelImageType::Pointer imgErode = BinaryErodeFilter3D( img, ballsize);
+
+  return BinaryDilateFilter3D( imgErode, ballsize );
+}
+
+LabelImageType::Pointer BinaryClosingFilter3D( LabelImageType::Pointer & img, unsigned int ballsize )
+{
+  LabelImageType::Pointer imgDilate = BinaryDilateFilter3D( img, ballsize );
+
+  return BinaryErodeFilter3D( imgDilate, ballsize );
+}
+
+// Function to convert a point from std::vector to itk::Point
+// this also performs the RAS -> LPS conversion necessary
+// from slicer -> ITK
+itk::Point<float, 3> convertStdVectorToITKPoint(const std::vector<float> & vec)
+{
+	itk::Point<float, 3> p;
+
+	// convert RAS to LPS
+	p[0] = -vec[0];
+	p[1] = -vec[1];
+	p[2] = vec[2];
+	return p;
 }
