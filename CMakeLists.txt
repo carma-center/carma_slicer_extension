@@ -165,7 +165,7 @@ slicerMacroBuildScriptedModule(
 #-----------------------------------------------------------------------------
 # Add LA Segmentation Using Graph Cuts Module (In progress)
 #-----------------------------------------------------------------------------
-#add_subdirectory(CMRToolkitLASegmentationGraphCuts)
+add_subdirectory(CMRToolkitLASegmentationGraphCuts)
 
 #-----------------------------------------------------------------------------
 # Add Cardiac MRI Toolkit Wizard
