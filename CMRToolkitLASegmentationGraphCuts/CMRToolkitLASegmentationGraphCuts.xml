@@ -2,10 +2,10 @@
 <executable>
     <category>Cardiac MRI Toolkit</category> 
     <title>LA Segmentation Using Graph Cuts</title>
-    <description>This module implements an algorithm to automatically segment out the left atrium from a cardiac LGE-MRI image volume. IMPORTANT: Model data must be downloaded in order to run this module. The data can be downloaded from:<![CDATA[<a href="http://slicer.kitware.com/midas3/folder/1550">http://slicer.kitware.com/midas3/folder/1550</a>]]> </description>
+    <description>This module can be used for research purposes only. The module implements an algorithm to automatically segment out the left atrium from a cardiac LGE-MRI image volume. IMPORTANT: Model data must be downloaded in order to run this module. The data can be downloaded from:<![CDATA[<a href="http://slicer.kitware.com/midas3/folder/1550">http://slicer.kitware.com/midas3/folder/1550</a>]]> </description>
     <version>0.1.0</version>
-    <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleAutomatedLASegmentation</documentation-url>
-    <license>Slicer</license>
+    <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/AutomatedLASegmentation</documentation-url>
+    <license>Research</license>
     <contributor>Gopal Veni, Salma Bengali, Alan Morris, Josh Cates, Rob MacLeod, Ross Whitaker</contributor>
     <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
     <parameters>
