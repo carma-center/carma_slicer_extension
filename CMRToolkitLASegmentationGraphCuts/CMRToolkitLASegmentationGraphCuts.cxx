@@ -84,8 +84,8 @@ typedef itk::Image<unsigned char, 3> LabelImageType;
 #define stk_len 11
 #define inf_vlu 1E+10
 // #define DELTAS 1 // smoothness constraint
-#define DELTAL 4 // lower separation constraint
-#define DELTAU 8 // upper separation constraint
+#define DELTAL 2 // lower separation constraint
+#define DELTAU 12 // upper separation constraint
 #define numS 2
 
 // void printmatrix(std::vector< std::vector<int> >& matrix);
@@ -94,8 +94,10 @@ void connectmat( std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat
 void readCmatrix( float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM);
 void Mconnectmat( int** Nnbor_mat, int** nbor_mat, int& nop );
 float interpolator( float* stk_index, ImageType::Pointer Image );
-float dotprod( float* Mstk, float* Tstk );
+float dotprod( float* Mstk, float* Tstk);
 void readstkmatrix( float** &stkglmatrix, std::ifstream &stkintFile, int& nop, int &numel );
+float DELTASL(unsigned int f, int ALPHA, int BETA);
+float DELTALB(unsigned int f, int ALPHA, int BETA);
 vtkPolyData* finalmesh(float*** &Coormat, int **&Segbdrymat, float** &segmesh, std::vector< std::vector<int> >& matrix, 
            int& Mlayers, int& nop, int& sz, std::string opmeshfile, vec1f& input_origin);
 void modelToLabelMap( ImageType::ConstPointer image, vtkPolyData* polydata, std::string outputImageFile );
@@ -140,7 +142,7 @@ int main(int argc, char *argv[])
         no_vertices = 14747; // for atrium data cluster 4
 
         // AKM: overriding!
-        no_vertices = 16913; // for atrium data cluster 4
+//        no_vertices = 16913; // for atrium data cluster 4
     }
 
     //inputImage = argv[1];
@@ -496,10 +498,16 @@ int main(int argc, char *argv[])
         numedges = numedges + nbor_mat[i][1];
     }
 
+//  Vnet arcs
+//    // num_intraarcs = T-link arcs + vertical arcs + oblique vertical arcs + base graph arcs
+//    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers-DELTAS)*numedges + numedges;
+//    // num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
+//    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*nop + Mlayers*nop + numedges;
+//  VCEnet arcs
     // num_intraarcs = T-link arcs + vertical arcs + oblique vertical arcs + base graph arcs
-    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers-DELTAS)*numedges + numedges;
+    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers*(Mlayers+1)*0.5)*numedges + numedges;
     // num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
-    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*nop + Mlayers*nop + numedges;
+    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*(DELTAU-DELTAL)*nop + Mlayers*nop + numedges;
 
     int num_arcs = numS*num_intraarcs + num_interarcs;
     std::cout<< "Total number of arcs = " << num_arcs<< "\n";
@@ -545,43 +553,110 @@ int main(int argc, char *argv[])
         }
     }
 
-    std::cout<<"arcs connecting nodes in the base graph" << std::endl;
-    int m = (Mlayers-1);
-    for (int n = 0; n < nop; n++ ){
-        for (int c = 2;c < sec_dim; c++){
-            if (Nnbor_mat[n][c] != -1){
-                g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-                g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-    //                    std::cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
-            }
-        }
-    }
+//  Vnet connections
+//    std::cout<<"arcs connecting nodes in the base graph" << std::endl;
+//    int m = (Mlayers-1);
+//    for (int n = 0; n < nop; n++ ){
+//        for (int c = 2;c < sec_dim; c++){
+//            if (Nnbor_mat[n][c] != -1){
+//                g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, 0);
+//                g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, 0);
+//    //                    std::cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
+//            }
+//        }
+//    }
 
-    std::cout << "arcs connecting node to the side-nodes in the layer below it" <<std::endl;
-    for (int m = 0; m < (Mlayers-DELTAS); m++){
-        for (int n = 0; n < nop; n++ ){
-            for (int c = 2;c < sec_dim; c++){
-                if (Nnbor_mat[n][c] != -1){
-                    g->add_edge((m*nop)+Nnbor_mat[n][0],((m+DELTAS)*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-                    g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+DELTAS)*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-    //                            std::cout << m*nop+Nnbor_mat[n][0] << "<->" << (m+1)*nop + Nnbor_mat[n][c] << " ";
+//    std::cout << "arcs connecting node to the side-nodes in the layer below it" <<std::endl;
+//    for (int m = 0; m < (Mlayers-DELTAS); m++){
+//        for (int n = 0; n < nop; n++ ){
+//            for (int c = 2;c < sec_dim; c++){
+//                if (Nnbor_mat[n][c] != -1){
+//                    g->add_edge((m*nop)+Nnbor_mat[n][0],((m+DELTAS)*nop) + Nnbor_mat[n][c], inf_vlu, 0);
+//                    g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+DELTAS)*nop) + Nnbor_mat[n][c], inf_vlu, 0);
+//    //                            std::cout << m*nop+Nnbor_mat[n][0] << "<->" << (m+1)*nop + Nnbor_mat[n][c] << " ";
+//                }
+//            }
+//        }
+//    }
+
+//    std::cout << "Inter-surface arcs" << "\n";
+//    for (int m = 0; m < Mlayers; m++){
+//        for (int n = 0; n < nop; n++ ){
+//            g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0);
+//            if (m < (Mlayers-(DELTAU-DELTAL))){
+//                g->add_edge(m*nop + n, num_nodes + ((m+(DELTAU-DELTAL))*nop)+n, inf_vlu, 0);
+//            }
+//            else if (m == (Mlayers-1))
+//                g->add_edge( m*nop + n, num_nodes + m*nop + n, inf_vlu, 0);
+//        }
+//    }
+
+//  VCEnet connections
+    // Parameters
+    int DELTAO = 4;
+    int ALPHA1 = 500;
+    int ALPHA2 = 5;
+    int BETA = 2; // quadratic penalty
+
+//  N-links
+    cout << "Oblique arcs" << "\n";
+    int EdgeIntrvlIC = 10;
+    vec1f Delta_ij(EdgeIntrvlIC, 0);
+    for(int m = 0; m < EdgeIntrvlIC; m++){
+        if(m == 0)
+            Delta_ij[m] = DELTASL(m, ALPHA1, BETA);
+        else
+            Delta_ij[m] = DELTALB(m, ALPHA1, BETA);
+    }
+    for(int m = 0; m < (Mlayers-1); m++){
+        for(int n = 0; n < nop; n++){
+            for(int c = 2; c < sec_dim;c++){
+                if(Nnbor_mat[n][c] != -1){
+                    for(int fij = 0; fij < EdgeIntrvlIC; fij++){
+                        if((m+fij) <= (Mlayers-1)){
+                            g->add_edge((m*nop)+Nnbor_mat[n][0],((m+fij)*nop) + Nnbor_mat[n][c],Delta_ij[fij],0);
+                            g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+fij)*nop) + Nnbor_mat[n][c], Delta_ij[fij], 0);
+                        }
+                    }
                 }
             }
         }
     }
-
-    std::cout << "Inter-surface arcs" << "\n";
-    for (int m = 0; m < Mlayers; m++){
-        for (int n = 0; n < nop; n++ ){
-            g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0);
-            if (m < (Mlayers-(DELTAU-DELTAL))){
-                g->add_edge(m*nop + n, num_nodes + ((m+(DELTAU-DELTAL))*nop)+n, inf_vlu, 0);
-            }
-            else if (m == (Mlayers-1))
-                g->add_edge( m*nop + n, num_nodes + m*nop + n, inf_vlu, 0);
-        }
+    cout<<"arcs connecting nodes in each base sub-graph" << endl;
+    int m = (Mlayers-1);
+    for (int n = 0; n < nop; n++ ){
+       for (int c = 2;c < sec_dim; c++){
+           if (Nnbor_mat[n][c] != -1){
+               g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
+               g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
+    //                    cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
+           }
+       }
     }
 
+//  Arcs between two sub-graphs
+    cout << "Inter-surface arcs" << "\n";
+    int EdgeIntrvlIS = DELTAU - DELTAL;
+    vec1f Delta_IS(EdgeIntrvlIS, 0);
+    for(int m = 0;  m < EdgeIntrvlIS; m++){
+        int q = abs((DELTAO-DELTAL) - m);
+        if(m == (DELTAO-DELTAL))
+            Delta_IS[m] = DELTASL(q, ALPHA2, BETA);
+        else if(m != (DELTAO-DELTAL))
+            Delta_IS[m] = DELTALB(q, ALPHA2, BETA);
+    }
+    for(int m = 0; m < Mlayers; m++){
+        for(int n = 0; n < nop; n++){
+            g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0); // opposite direction arcs
+            if(m < (Mlayers-1)){
+                for(int fij = 1; fij < (Mlayers - m); fij++){ // fij = 1 coz no edge connection exists at fij = 0
+                    if((m+fij) <= (Mlayers-1))
+                        g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, Delta_IS[fij], 0);
+                }
+            }else if(m == (Mlayers-1))
+                g->add_edge(m*nop + n, num_nodes + m*nop + n, inf_vlu, inf_vlu);
+        }
+    }
     std::cout << "all arcs added" << std::endl;
 
     // Finding minimum s-t cut
@@ -933,24 +1008,34 @@ float dotprod(float *Mstk, float *Tstk){
 
   // calculating L2 norm
     float SS_Tstk = 0;
+    float varprod = 0;
     for (int m = 0; m < stk_len; m++){
         float Tvrnc = Tstk[m] - Tstkmean;
         SS_Tstk = SS_Tstk + (Tvrnc * Tvrnc);
+        varprod = varprod + Mstk[m] * Tvrnc;
     }
     float Tstkl2norm = sqrt(SS_Tstk);
     if (Tstkl2norm == 0)
         Tstkl2norm = 1E5;
 
     // Normalized cross-correlation
-    float varprod = 0;
-    for (int m = 0; m < stk_len; m++){
-        float Tvrnc = Tstk[m] - Tstkmean;
-        varprod = varprod + Mstk[m] * Tvrnc;
-    }
     Ncorr = varprod/Tstkl2norm;
     return Ncorr;
-
 }
+
+float DELTASL(unsigned int f, int alpha, int beta){ // SL = same level
+    float fa = alpha * (pow((f+1),beta));
+    float sl = alpha * (pow(f,beta));
+    return((fa - sl)); // cost penalty edge function
+}
+
+float DELTALB(unsigned int f, int alpha, int beta){ // LB == level below
+    float fa = alpha * (pow((f+1),beta));
+    float sl = alpha * (pow(f,beta));
+    float fb = alpha * (pow((f-1),beta));
+    return((fa-sl) - (sl-fb)); // cost penalty edge function
+}
+
 
 vtkPolyData* finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, vector<vector<int> > &matrix, 
            int &Mlayers, int &nop, int &sz, std::string opmeshfile, vec1f& input_origin){
