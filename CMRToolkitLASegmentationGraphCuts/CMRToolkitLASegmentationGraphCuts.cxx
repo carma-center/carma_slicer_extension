@@ -96,8 +96,8 @@ void Mconnectmat( int** Nnbor_mat, int** nbor_mat, int& nop );
 float interpolator( float* stk_index, ImageType::Pointer Image );
 float dotprod( float* Mstk, float* Tstk);
 void readstkmatrix( float** &stkglmatrix, std::ifstream &stkintFile, int& nop, int &numel );
-float DELTASL(unsigned int f, int ALPHA, int BETA);
-float DELTALB(unsigned int f, int ALPHA, int BETA);
+float DELTASL(int f, int ALPHA, int BETA);
+float DELTALB(int f, int ALPHA, int BETA);
 vtkPolyData* finalmesh(float*** &Coormat, int **&Segbdrymat, float** &segmesh, std::vector< std::vector<int> >& matrix, 
            int& Mlayers, int& nop, int& sz, std::string opmeshfile, vec1f& input_origin);
 void modelToLabelMap( ImageType::ConstPointer image, vtkPolyData* polydata, std::string outputImageFile );
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
         no_vertices = 14747; // for atrium data cluster 4
 
         // AKM: overriding!
-//        no_vertices = 16913; // for atrium data cluster 4
+        no_vertices = 16913; // for atrium data cluster 4
     }
 
     //inputImage = argv[1];
@@ -1023,13 +1023,13 @@ float dotprod(float *Mstk, float *Tstk){
     return Ncorr;
 }
 
-float DELTASL(unsigned int f, int alpha, int beta){ // SL = same level
+float DELTASL(int f, int alpha, int beta){ // SL = same level
     float fa = alpha * (pow((f+1),beta));
     float sl = alpha * (pow(f,beta));
     return((fa - sl)); // cost penalty edge function
 }
 
-float DELTALB(unsigned int f, int alpha, int beta){ // LB == level below
+float DELTALB(int f, int alpha, int beta){ // LB == level below
     float fa = alpha * (pow((f+1),beta));
     float sl = alpha * (pow(f,beta));
     float fb = alpha * (pow((f-1),beta));
