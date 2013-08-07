@@ -91,6 +91,7 @@ typedef itk::Image<unsigned char, 3> LabelImageType;
 // void printmatrix(std::vector< std::vector<int> >& matrix);
 void readmatrix( std::vector< std::vector<int> >& matrix, std::ifstream& myfile, int& sz );
 void connectmat( std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat );
+void read1Cmatrix(std::ifstream& myfile, int& num_pts);
 void readCmatrix( float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM);
 void Mconnectmat( int** Nnbor_mat, int** nbor_mat, int& nop );
 float interpolator( float* stk_index, ImageType::Pointer Image );
@@ -131,19 +132,19 @@ int main(int argc, char *argv[])
     MeanCOM[1] = 205.65;
     MeanCOM[2] = 57.4859;
 
-    int no_vertices = 0;
-    if (MDL_OPTION == 1){
-        no_vertices = 12027; // for atrium data cluster 1
-    }else if (MDL_OPTION == 2){
-        no_vertices = 16087;// for atrium data cluster 2
-    }else if (MDL_OPTION == 3){
-      no_vertices = 16913; // for atrium data cluster 3
-    }else if(MDL_OPTION == 4){
-        no_vertices = 14747; // for atrium data cluster 4
+//    int no_vertices = 0;
+//    if (MDL_OPTION == 1){
+//        no_vertices = 12027; // for atrium data cluster 1
+//    }else if (MDL_OPTION == 2){
+//        no_vertices = 16087;// for atrium data cluster 2
+//    }else if (MDL_OPTION == 3){
+//      no_vertices = 16913; // for atrium data cluster 3
+//    }else if(MDL_OPTION == 4){
+//        no_vertices = 14747; // for atrium data cluster 4
 
-        // AKM: overriding!
-        no_vertices = 16913; // for atrium data cluster 4
-    }
+//        // AKM: overriding!
+//        no_vertices = 16913; // for atrium data cluster 4
+//    }
 
     //inputImage = argv[1];
     //outputImage = argv[2];
@@ -156,15 +157,15 @@ int main(int argc, char *argv[])
     reader->Update();
     ImageType::ConstPointer ipimage = reader->GetOutput();
 
-		// Convert point lists to ITK points and convert RAS -> LPS		
-		center_of_LA = convertStdVectorToITKPoint( centerOfLA );	
-		
-		ipimage->TransformPhysicalPointToIndex( center_of_LA, center_index );
-		
-		RealCOM[0] = center_index[0];
-		RealCOM[1] = center_index[1];
-		RealCOM[2] = center_index[2];
-		
+    // Convert point lists to ITK points and convert RAS -> LPS
+    center_of_LA = convertStdVectorToITKPoint( centerOfLA );
+
+    ipimage->TransformPhysicalPointToIndex( center_of_LA, center_index );
+
+    RealCOM[0] = center_index[0];
+    RealCOM[1] = center_index[1];
+    RealCOM[2] = center_index[2];
+
     // Get input image pixel spacing and origin
     const ImageType::SpacingType& inputspacing = ipimage->GetSpacing();
     vec1f ipspacing(3,0);
@@ -222,26 +223,38 @@ int main(int argc, char *argv[])
     std::vector< std::vector<int> > matrix;
 	  
     int sz = 0;
-   
     readmatrix(matrix, inTextFile, sz );
     inTextFile.close();
     std::cout<<"done!"<<std::endl;
-		
     sz--;
+
     // Initialize connectivity matrix
     int** nbor_mat = new int*[sz];
     for(int  i=0; i < sz; i++)
     nbor_mat[i] = new int[sec_dim];
-
     connectmat(matrix, sz, nbor_mat);
+
+// Counting the number of points of a layer
+    std::stringstream PtsFile;
+    PtsFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_0_0.pts";
+    std::string PtFileStr = PtsFile.str();
+    std::ifstream PtFile(PtFileStr.c_str()); // converting to C_std::string
+    if(PtFile.fail())
+    {
+        std::cerr << "Error reading point file: " << PtFileStr.c_str() << std::endl;
+        return EXIT_FAILURE;
+    }
+    int NumPts = 0;
+    read1Cmatrix(PtFile, NumPts);
+    int no_vertices = NumPts;
+    std::cout << "Each layer contains: " << no_vertices << " points\n";
 
     // allocate memory for Coordinate matrix1
     float*** Coormat1;
     Coormat1 = new float**[Mlayers];
     std::cout<< "memory allocated for coordinate matrix1"<<std::endl;
     int nop = 0;
-		
-		
+
     // put coordinates into 3D matrix
     std::cout<< "Reading point file..." << "\n";
     for(int m = 0; m < Mlayers; m++){
@@ -840,6 +853,17 @@ void connectmat(std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat)
   }	
 }
 
+// Reading a point file to acquire number of points
+void read1Cmatrix(std::ifstream& myfile, int& num_pts){
+    while(!myfile.eof()){
+        std::string line;
+        getline(myfile,line);
+        if(line.empty())
+            break;
+        num_pts = num_pts + 1;
+    }
+}
+
 // Reading point files
 void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM)
 {
@@ -1024,14 +1048,16 @@ float dotprod(float *Mstk, float *Tstk){
 }
 
 float DELTASL(int f, int alpha, int beta){ // SL = same level
-		double f_var = static_cast<double>(f);
+//		double f_var = static_cast<double>(f);
+    float f_var = f;
     float fa = alpha * (pow((f_var+1),beta));
     float sl = alpha * (pow(f_var,beta));
     return((fa - sl)); // cost penalty edge function
 }
 
 float DELTALB(int f, int alpha, int beta){ // LB == level below
-		double f_var = static_cast<double>(f);
+//		double f_var = static_cast<double>(f);
+    float f_var = f;
     float fa = alpha * (pow((f_var+1),beta));
     float sl = alpha * (pow(f_var,beta));
     float fb = alpha * (pow((f_var-1),beta));
