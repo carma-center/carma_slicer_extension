@@ -1024,15 +1024,17 @@ float dotprod(float *Mstk, float *Tstk){
 }
 
 float DELTASL(int f, int alpha, int beta){ // SL = same level
-    float fa = alpha * (pow((f+1),beta));
-    float sl = alpha * (pow(f,beta));
+		double f_var = static_cast<double>(f);
+    float fa = alpha * (pow((f_var+1),beta));
+    float sl = alpha * (pow(f_var,beta));
     return((fa - sl)); // cost penalty edge function
 }
 
 float DELTALB(int f, int alpha, int beta){ // LB == level below
-    float fa = alpha * (pow((f+1),beta));
-    float sl = alpha * (pow(f,beta));
-    float fb = alpha * (pow((f-1),beta));
+		double f_var = static_cast<double>(f);
+    float fa = alpha * (pow((f_var+1),beta));
+    float sl = alpha * (pow(f_var,beta));
+    float fb = alpha * (pow((f_var-1),beta));
     return((fa-sl) - (sl-fb)); // cost penalty edge function
 }
 
