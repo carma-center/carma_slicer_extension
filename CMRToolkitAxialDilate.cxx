@@ -11,7 +11,7 @@
 #include <itkImageFileWriter.h>
 #include <itkSliceBySliceImageFilter.h>
 #include "itkPluginUtilities.h"
-#include <itkBinaryDilateImagefilter.h>
+#include <itkBinaryDilateImageFilter.h>
 #include "itkBinaryBallStructuringElement.h"
 
 
