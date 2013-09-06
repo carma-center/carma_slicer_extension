@@ -21,161 +21,161 @@ set(MODULE_TARGET_LIBRARIES
   ${ITK_LIBRARIES}
   )
 
-# #-----------------------------------------------------------------------------
-# # Inhomogeneity Correction Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Inhomogeneity Correction Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME "CMRToolkitInhomogeneityCorrection")
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "CMRToolkitInhomogeneityCorrection")
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+SEMMacroBuildCLI(
+  NAME ${MODULE_NAME}
+  LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+  TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Axial Dilate Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Axial Dilate Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME "CMRToolkitAxialDilate")
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "CMRToolkitAxialDilate")
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+ SEMMacroBuildCLI(
+   NAME ${MODULE_NAME}
+   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Registration Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Registration Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME "CMRToolkitRegistration")
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "CMRToolkitRegistration")
 
-# #-----------------------------------------------------------------------------
-# slicerMacroBuildScriptedModule(
-#   NAME CMRToolkitRegistration
-#   SCRIPTS "CMRToolkitRegistration.py"
-#   RESOURCES ""
-#   )
+#-----------------------------------------------------------------------------
+ slicerMacroBuildScriptedModule(
+   NAME CMRToolkitRegistration
+   SCRIPTS "CMRToolkitRegistration.py"
+   RESOURCES ""
+   )
 
 
-# #-----------------------------------------------------------------------------
-# # Automatic Left Atrial Scar Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Automatic Left Atrial Scar Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME CMRToolkitAutomaticLeftAtrialScar)
+#-----------------------------------------------------------------------------
+set(MODULE_NAME CMRToolkitAutomaticLeftAtrialScar)
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+ SEMMacroBuildCLI(
+   NAME ${MODULE_NAME}
+   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Registration Module using BRAINSFit
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Registration Module using BRAINSFit
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME "CMRToolkitRegistrationBRAINSFit")
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "CMRToolkitRegistrationBRAINSFit")
 
-# #-----------------------------------------------------------------------------
-# slicerMacroBuildScriptedModule(
-#   NAME CMRToolkitRegistrationBRAINSFit
-#   SCRIPTS "CMRToolkitRegistrationBRAINSFit"
-#   RESOURCES ""
-#   )
+#-----------------------------------------------------------------------------
+ slicerMacroBuildScriptedModule(
+   NAME CMRToolkitRegistrationBRAINSFit
+   SCRIPTS "CMRToolkitRegistrationBRAINSFit"
+   RESOURCES ""
+   )
 
-# #-----------------------------------------------------------------------------
-# # PV Antrum Cut Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# PV Antrum Cut Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME CMRToolkitPVAntrumCut)
+#-----------------------------------------------------------------------------
+set(MODULE_NAME CMRToolkitPVAntrumCut)
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+SEMMacroBuildCLI(
+   NAME ${MODULE_NAME}
+   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Connected Threshold Filter Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Connected Threshold Filter Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME CMRToolkitConnectedThresholdFilter)
+#-----------------------------------------------------------------------------
+set(MODULE_NAME CMRToolkitConnectedThresholdFilter)
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+ SEMMacroBuildCLI(
+   NAME ${MODULE_NAME}
+   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Isolated Connected Filter Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Isolated Connected Filter Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME CMRToolkitIsolatedConnectedFilter)
+#-----------------------------------------------------------------------------
+set(MODULE_NAME CMRToolkitIsolatedConnectedFilter)
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+ SEMMacroBuildCLI(
+   NAME ${MODULE_NAME}
+   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Boolean REMOVE Filter Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Boolean REMOVE Filter Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME CMRToolkitBooleanREMOVEFilter)
+#-----------------------------------------------------------------------------
+set(MODULE_NAME CMRToolkitBooleanREMOVEFilter)
 
-# #-----------------------------------------------------------------------------
-# SEMMacroBuildCLI(
-#   NAME ${MODULE_NAME}
-#   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
-#   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
-#   )
+#-----------------------------------------------------------------------------
+ SEMMacroBuildCLI(
+   NAME ${MODULE_NAME}
+   LOGO_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/NamicCarmaLogo.h
+   TARGET_LIBRARIES ${MODULE_TARGET_LIBRARIES}
+   )
 
-# #-----------------------------------------------------------------------------
-# # Threshold Model Module
-# #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Threshold Model Module
+#-----------------------------------------------------------------------------
 
-# #-----------------------------------------------------------------------------
-# set(MODULE_NAME "ThresholdModel")
+#-----------------------------------------------------------------------------
+set(MODULE_NAME "ThresholdModel")
 
-# #-----------------------------------------------------------------------------
-# slicerMacroBuildScriptedModule(
-#   NAME ThresholdModel
-#   SCRIPTS "ThresholdModel"
-#   RESOURCES ""
-#   )
+#-----------------------------------------------------------------------------
+ slicerMacroBuildScriptedModule(
+   NAME ThresholdModel
+   SCRIPTS "ThresholdModel"
+   RESOURCES ""
+   )
 
 #-----------------------------------------------------------------------------
 # Add LA Segmentation Using Graph Cuts Module (In progress)
 #-----------------------------------------------------------------------------
 add_subdirectory(CMRToolkitLASegmentationGraphCuts)
 
-# #-----------------------------------------------------------------------------
-# # Add Cardiac MRI Toolkit Wizard
-# #-----------------------------------------------------------------------------
-# add_subdirectory(CMRToolkitWizard)
+#-----------------------------------------------------------------------------
+# Add Cardiac MRI Toolkit Wizard
+#-----------------------------------------------------------------------------
+add_subdirectory(CMRToolkitWizard)
 
-# #-----------------------------------------------------------------------------
-# if(BUILD_TESTING)
-#   add_subdirectory(Testing)
-# endif()
+#-----------------------------------------------------------------------------
+ if(BUILD_TESTING)
+   add_subdirectory(Testing)
+ endif()
 
 #-----------------------------------------------------------------------------
 if(NOT Slicer_SOURCE_DIR)
