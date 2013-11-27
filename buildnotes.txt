@@ -1,0 +1,9 @@
+The Cardiac MRI Toolkit Extension can be built using the latest release of Slicer v4.3 or the nightly Slicer build. The nightly Slicer build requires Qt 4.8.5, CMake >= 2.8.9 and Git >= 1.6.5.
+
+##############################################
+# CMR Toolkit Extension
+##############################################
+
+Mac:
+cmake ../carma_slicer_extension -DCMAKE_BUILD_TYPE=Release -DSlicer_DIR=/Users/salmabengali/Slicer-nightlySuperbuild/Slicer-build
+
