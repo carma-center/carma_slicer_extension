@@ -50,8 +50,8 @@ class CMRToolkitWizardWidget:
     workflowWidget = ctk.ctkWorkflowStackedWidget()
     workflowWidget.setWorkflow( self.workflow )
 
-    workflowWidget.buttonBoxWidget().nextButtonDefaultText = ""
-    workflowWidget.buttonBoxWidget().backButtonDefaultText = ""
+    #workflowWidget.buttonBoxWidget().nextButtonDefaultText = ""
+    #workflowWidget.buttonBoxWidget().backButtonDefaultText = ""
     
     # create all 9 wizard steps
     self.selectMRIDataStep = Resources.CMRToolkitWizardSelectDataStep( 'SelectMRIData' )
