@@ -5,7 +5,7 @@ from __main__ import vtk, qt, ctk, slicer
 
 class ThresholdModel:
   def __init__(self, parent):
-    parent.title = "Threshold Model"
+    parent.title = "Scar Visualization"
     parent.categories = ["Cardiac MRI Toolkit"]
     parent.contributors = ["Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"]
     parent.helpText = """This module is used for thresholding a model of the left atrium of the heart. It requires three inputs:<br>1.A cardiac LGE-MRI image<br>2.The LA endocardium segmentation<br> 3.The LA wall segmentation.<br><br> The final model can be thresholded as required to display regions of fibrosis or scar.<br><br>More information about this module can be found at <a href=http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleThresholdModel>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleThresholdModel"""
@@ -151,7 +151,8 @@ class ThresholdModelWidget:
           endoHierarchy = node
           break
         
-      endoHierarchy = slicer.vtkMRMLModelHierarchyNode()
+    endoHierarchy = slicer.vtkMRMLModelHierarchyNode()
+        #  endoHierarchy = slicer.vtkMRMLModelNode()
       endoHierarchy.SetScene( slicer.mrmlScene )
       endoHierarchy.SetName( "Endo Model" )
       slicer.mrmlScene.AddNode( endoHierarchy )		
@@ -175,7 +176,8 @@ class ThresholdModelWidget:
           wallHierarchy = node
           break
         
-      wallHierarchy = slicer.vtkMRMLModelHierarchyNode()
+    wallHierarchy = slicer.vtkMRMLModelHierarchyNode()
+        #  wallHierarchy = slicer.vtkMRMLModelNode()
       wallHierarchy.SetScene( slicer.mrmlScene )
       wallHierarchy.SetName( "Wall Model" )
       wallHierarchy.SetModelNodeID("Wall Model")
