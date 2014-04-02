@@ -149,16 +149,16 @@ set(MODULE_NAME CMRToolkitBooleanREMOVEFilter)
    )
 
 #-----------------------------------------------------------------------------
-# Threshold Model Module
+# Scar Visualization Module
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-set(MODULE_NAME "ThresholdModel")
+set(MODULE_NAME "ScarVisualization")
 
 #-----------------------------------------------------------------------------
  slicerMacroBuildScriptedModule(
-   NAME ThresholdModel
-   SCRIPTS "ThresholdModel"
+   NAME ScarVisualization
+   SCRIPTS "ScarVisualization"
    RESOURCES ""
    )
 
