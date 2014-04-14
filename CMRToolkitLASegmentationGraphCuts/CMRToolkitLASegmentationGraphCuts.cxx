@@ -131,7 +131,20 @@ int main(int argc, char *argv[])
 	MeanCOM[0] = 202.088;
 	MeanCOM[1] = 205.65;
 	MeanCOM[2] = 57.4859;
-	
+
+//    int no_vertices = 0;
+//    if(MDL_OPTION == 1){
+//        no_vertices = 12027;
+//    }else if(MDL_OPTION == 2){
+//        no_vertices = 16087;
+//    }else if(MDL_OPTION == 3){
+//        no_vertices = 16913;
+//    }else if(MDL_OPTION == 14747){
+//        no_vertices = 14747;
+////        AKM: overriding!
+//        no_vertices = 16913;
+//    }
+
 	opmeshfile1 = epiMesh;
 	opmeshfile2 = endoMesh;
 	
@@ -143,12 +156,11 @@ int main(int argc, char *argv[])
 	
 	// Convert point lists to ITK points and convert RAS -> LPS
 	center_of_LA = convertStdVectorToITKPoint( centerOfLA );
-	
 	ipimage->TransformPhysicalPointToIndex( center_of_LA, center_index );
 	
-	RealCOM[0] = centerOfLA[0];
-	RealCOM[1] = centerOfLA[1];
-	RealCOM[2] = centerOfLA[2];
+    RealCOM[0] = center_index[0];
+    RealCOM[1] = center_index[1];
+    RealCOM[2] = center_index[2];
 	
 	// Get input image pixel spacing and origin
 	const ImageType::SpacingType& inputspacing = ipimage->GetSpacing();
@@ -215,7 +227,7 @@ int main(int argc, char *argv[])
 	// Initialize connectivity matrix
 	int** nbor_mat = new int*[sz];
 	for(int  i=0; i < sz; i++)
-    nbor_mat[i] = new int[sec_dim];
+	nbor_mat[i] = new int[sec_dim];
 	connectmat(matrix, sz, nbor_mat);
 	
 	// Counting the number of points of a layer
@@ -298,7 +310,7 @@ int main(int argc, char *argv[])
 	
 	// put Model stick intensities into 2D matrix
 	std::stringstream OSMFile;
-	OSMFile << model_dir << "/POSTWALL0" << model_option_str << "RLS_1_3_twinstk2.dat";
+	OSMFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_1_3_twinstk.dat";
 	stkglfile = OSMFile.str();
 	
 	std::ifstream stkintFile1(stkglfile.c_str()); // converting to C_std::string
@@ -318,7 +330,7 @@ int main(int argc, char *argv[])
 	readstkmatrix(Mstkglmat1, stkintFile1, nop, numstkgl);
 	
 	std::stringstream ISMFile;
-	ISMFile << model_dir << "/POSTENDO0" << model_option_str << "RLS_0_0stk2.dat";
+	ISMFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_0_0stk.dat";
 	stkglfile = ISMFile.str();
 	//stkglfile = "/Users/salmabengali/data/1/POSTENDO01RLS_0_0stk2.dat";
 	
@@ -344,7 +356,7 @@ int main(int argc, char *argv[])
 	// put stick indices into 3D matrix
 	for (int m = 0; m < layers; m++){
 		std::stringstream MIFile;
-		MIFile << model_dir << "/POSTENDO0" << model_option_str << "RLS_" << Cooridx[m] << "stkidx2.dat";;
+		MIFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_" << Cooridx[m] << "stkidx.dat";;
 		stkidxfile = MIFile.str();
 		//stkidxfile = "/Users/salmabengali/data/1/POSTENDO01RLS_stkidx2.dat";
 		//stkidxfile.insert(25 + 16,Cooridx[m]);
@@ -495,16 +507,16 @@ int main(int argc, char *argv[])
 		numedges = numedges + nbor_mat[i][1];
 	}
 	
-//  Vnet arcs
+////  Vnet arcs
 //    // num_intraarcs = T-link arcs + vertical arcs + oblique vertical arcs + base graph arcs
 //    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers-DELTAS)*numedges + numedges;
 //    // num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
 //    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*nop + Mlayers*nop + numedges;
 //  VCEnet arcs
     // num_intraarcs = T-link arcs + vertical arcs + oblique vertical arcs + base graph arcs
-	int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers*(Mlayers+1)*0.5)*numedges + numedges;
-	// num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
-	int num_interarcs = (Mlayers-(DELTAU-DELTAL))*(DELTAU-DELTAL)*nop + Mlayers*nop + numedges;
+    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers*(Mlayers+1)*0.5)*numedges + numedges;
+    // num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
+    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*(DELTAU-DELTAL)*nop + Mlayers*nop + numedges;
 	
 	int num_arcs = numS*num_intraarcs + num_interarcs;
 	std::cout<< "Total number of arcs = " << num_arcs<< "\n";
@@ -550,7 +562,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	//  Vnet connections
+//	//  Vnet connections
 //    std::cout<<"arcs connecting nodes in the base graph" << std::endl;
 //    int m = (Mlayers-1);
 //    for (int n = 0; n < nop; n++ ){
@@ -590,70 +602,70 @@ int main(int argc, char *argv[])
 
 //  VCEnet connections
     // Parameters
-	int DELTAO = 4;
-	int ALPHA1 = 500;
-	int ALPHA2 = 5;
-	int BETA = 2; // quadratic penalty
+    int DELTAO = 4;
+    int ALPHA1 = 500;
+    int ALPHA2 = 5;
+    int BETA = 2; // quadratic penalty
 	
-	//  N-links
-	cout << "Oblique arcs" << "\n";
-	int EdgeIntrvlIC = 10;
-	vec1f Delta_ij(EdgeIntrvlIC, 0);
-	for(int m = 0; m < EdgeIntrvlIC; m++){
-		if(m == 0)
-			Delta_ij[m] = DELTASL(m, ALPHA1, BETA);
-		else
-			Delta_ij[m] = DELTALB(m, ALPHA1, BETA);
-	}
-	for(int m = 0; m < (Mlayers-1); m++){
-		for(int n = 0; n < nop; n++){
-			for(int c = 2; c < sec_dim;c++){
-				if(Nnbor_mat[n][c] != -1){
-					for(int fij = 0; fij < EdgeIntrvlIC; fij++){
-						if((m+fij) <= (Mlayers-1)){
-							g->add_edge((m*nop)+Nnbor_mat[n][0],((m+fij)*nop) + Nnbor_mat[n][c],Delta_ij[fij],0);
-							g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+fij)*nop) + Nnbor_mat[n][c], Delta_ij[fij], 0);
-						}
-					}
-				}
-			}
-		}
-	}
-	cout<<"arcs connecting nodes in each base sub-graph" << endl;
-	int m = (Mlayers-1);
-	for (int n = 0; n < nop; n++ ){
-		for (int c = 2;c < sec_dim; c++){
-			if (Nnbor_mat[n][c] != -1){
-				g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
-				g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
-				//                    cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
-			}
-		}
-	}
+    //  N-links
+    cout << "Oblique arcs" << "\n";
+    int EdgeIntrvlIC = 10;
+    vec1f Delta_ij(EdgeIntrvlIC, 0);
+    for(int m = 0; m < EdgeIntrvlIC; m++){
+        if(m == 0)
+            Delta_ij[m] = DELTASL(m, ALPHA1, BETA);
+        else
+            Delta_ij[m] = DELTALB(m, ALPHA1, BETA);
+    }
+    for(int m = 0; m < (Mlayers-1); m++){
+        for(int n = 0; n < nop; n++){
+            for(int c = 2; c < sec_dim;c++){
+                if(Nnbor_mat[n][c] != -1){
+                    for(int fij = 0; fij < EdgeIntrvlIC; fij++){
+                        if((m+fij) <= (Mlayers-1)){
+                            g->add_edge((m*nop)+Nnbor_mat[n][0],((m+fij)*nop) + Nnbor_mat[n][c],Delta_ij[fij],0);
+                            g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+fij)*nop) + Nnbor_mat[n][c], Delta_ij[fij], 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cout<<"arcs connecting nodes in each base sub-graph" << endl;
+    int m = (Mlayers-1);
+    for (int n = 0; n < nop; n++ ){
+        for (int c = 2;c < sec_dim; c++){
+            if (Nnbor_mat[n][c] != -1){
+                g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
+                g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
+                //                    cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
+            }
+        }
+    }
 	
-	//  Arcs between two sub-graphs
-	cout << "Inter-surface arcs" << "\n";
-	int EdgeIntrvlIS = DELTAU - DELTAL;
-	vec1f Delta_IS(EdgeIntrvlIS, 0);
-	for(int m = 0;  m < EdgeIntrvlIS; m++){
-		int q = abs((DELTAO-DELTAL) - m);
-		if(m == (DELTAO-DELTAL))
-			Delta_IS[m] = DELTASL(q, ALPHA2, BETA);
-		else if(m != (DELTAO-DELTAL))
-			Delta_IS[m] = DELTALB(q, ALPHA2, BETA);
-	}
-	for(int m = 0; m < Mlayers; m++){
-		for(int n = 0; n < nop; n++){
-			g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0); // opposite direction arcs
-			if(m < (Mlayers-1)){
-				for(int fij = 1; fij < (Mlayers - m); fij++){ // fij = 1 coz no edge connection exists at fij = 0
-					if((m+fij) <= (Mlayers-1))
-						g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, Delta_IS[fij], 0);
-				}
-			}else if(m == (Mlayers-1))
-				g->add_edge(m*nop + n, num_nodes + m*nop + n, inf_vlu, inf_vlu);
-		}
-	}
+    //  Arcs between two sub-graphs
+    cout << "Inter-surface arcs" << "\n";
+    int EdgeIntrvlIS = DELTAU - DELTAL;
+    vec1f Delta_IS(EdgeIntrvlIS, 0);
+    for(int m = 0;  m < EdgeIntrvlIS; m++){
+        int q = abs((DELTAO-DELTAL) - m);
+        if(m == (DELTAO-DELTAL))
+            Delta_IS[m] = DELTASL(q, ALPHA2, BETA);
+        else if(m != (DELTAO-DELTAL))
+            Delta_IS[m] = DELTALB(q, ALPHA2, BETA);
+    }
+    for(int m = 0; m < Mlayers; m++){
+        for(int n = 0; n < nop; n++){
+            g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0); // opposite direction arcs
+            if(m < (Mlayers-1)){
+                for(int fij = 1; fij < (Mlayers - m); fij++){ // fij = 1 coz no edge connection exists at fij = 0
+                    if((m+fij) <= (Mlayers-1))
+                        g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, Delta_IS[fij], 0);
+                }
+            }else if(m == (Mlayers-1))
+                g->add_edge(m*nop + n, num_nodes + m*nop + n, inf_vlu, inf_vlu);
+        }
+    }
 	std::cout << "all arcs added" << std::endl;
 	
 	// Finding minimum s-t cut
@@ -1050,7 +1062,7 @@ float DELTALB(int f, int alpha, int beta){ // LB == level below
 
 
 vtkPolyData* finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, vector<vector<int> > &matrix, 
-											 int &Mlayers, int &nop, int &sz, std::string opmeshfile, vec1f& input_origin){
+		       int &Mlayers, int &nop, int &sz, std::string opmeshfile, vec1f& input_origin){
 	//std::cout << "finalmesh function" << std::endl;
 	//ofstream outdata;
 	//outdata.open(opmeshfile.c_str());
