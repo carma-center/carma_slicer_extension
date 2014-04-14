@@ -6,29 +6,30 @@
     <version>0.1.0</version>
     <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/AutomatedLASegmentation</documentation-url>
     <license>Research</license>
-    <contributor>Gopal Veni, Salma Bengali, Alan Morris, Josh Cates, Rob MacLeod, Ross Whitaker</contributor>
+    <contributor>Gopalkrishna Veni, Salma Bengali, Alan Morris, Josh Cates, Rob MacLeod, Ross Whitaker</contributor>
     <acknowledgements><![CDATA[This work was supported by ...]]></acknowledgements>
     <parameters>
         <label>IO</label>
         <description>Input/output parameters</description>
         <image>
             <name>inputImage</name>
-            <label>Input MRI Image</label>
+            <label>Input Image</label>
             <index>0</index>
             <channel>input</channel>
             <description><![CDATA[Cardiac LGE-MRI input image volume]]></description>
         </image>
         <integer>
-            <name>deltaS</name>
-            <label>Smoothness Parameter</label>
+            <name>s_factor</name>
+            <label>Smoothness</label>
             <index>1</index>
             <channel>input</channel>
+            <default> 300 </default>
             <constraints>
-                <minimum> 1 </minimum>
-                <maximum> 10 </maximum>
-                <step> 1 </step>
+                <minimum> 100 </minimum>
+                <maximum> 1000 </maximum>             
+                <step> 100 </step>
             </constraints>
-            <description><![CDATA[Smoothness constraint for a surface. A lower value will result in a smoother output segmentation.]]></description>
+            <description><![CDATA[Scaling factor on surface's smoothness based on VCE-weight net strategy. A lower value will result in a smoother output.]]></description>
         </integer>
         <integer>
             <name>MdlOption</name>
@@ -44,32 +45,33 @@
         </integer>
         <directory>
             <name>inputDataDirectory</name>
-            <label>Model Data Directory</label>
+            <label>Model Directory</label>
             <index>3</index>
             <channel>input</channel>
             <description><![CDATA[The directory from which to import a specific model's data. Model data must be downloaded. See 'Help' tab for details. Directory must match the selected model number.]]></description>
         </directory> 
         <point>
             <name>centerOfLA</name>
-            <label>Center of Left Atrium</label>
+            <label>LA Center</label>
             <longflag>centerOfLA</longflag>
             <channel>input</channel>
             <description><![CDATA[Select the approximate center of the LA by placing a fiducial.]]></description>
         </point>
         <image type="label">
             <name>outputEndoImage</name>
-            <label>Output Endo Label Image</label>
+            <label> Endo Image</label>
             <index>4</index>
             <channel>output</channel>
             <description><![CDATA[The segmented output endocardium label volume]]></description>
         </image>
         <image type="label">
             <name>outputEpiImage</name>
-            <label>Output Epi Label Image</label>
+            <label>Epi Image</label>
             <index>5</index>
             <channel>output</channel>
             <description><![CDATA[The segmented output epicardium label volume]]></description>
         </image>
+        <!--
         <geometry fileExtensions=".vtk">
             <name>endoMesh</name>
             <label>Endo Mesh</label>
@@ -84,5 +86,6 @@
             <channel>output</channel>
             <description><![CDATA[The output epicardium mesh]]></description>
         </geometry>
+        -->
     </parameters>
 </executable>
