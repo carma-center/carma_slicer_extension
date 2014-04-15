@@ -3,16 +3,16 @@ from __main__ import vtk, qt, ctk, slicer
 # Threshold Model
 #
 
-class ThresholdModel:
+class ScarVisualization:
   def __init__(self, parent):
     parent.title = "Scar Visualization"
     parent.categories = ["Cardiac MRI Toolkit"]
     parent.contributors = ["Salma Bengali (CARMA), Alan Morris (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA)"]
-    parent.helpText = """This module is used for thresholding a model of the left atrium of the heart. It requires three inputs:<br>1.A cardiac LGE-MRI image<br>2.The LA endocardium segmentation<br> 3.The LA wall segmentation.<br><br> The final model can be thresholded as required to display regions of fibrosis or scar.<br><br>More information about this module can be found at <a href=http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleThresholdModel>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/SlicerModuleThresholdModel"""
+    parent.helpText = """This module is used for scar or fibrosis visualization of the left atrium of the heart. It requires three inputs:<br>1.A cardiac LGE-MRI image<br>2.The LA endocardium segmentation<br> 3.The LA wall segmentation.<br><br> The final model can be thresholded as required to display regions of fibrosis or scar.<br><br>More information about this module can be found at <a href=http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/ScarVisualization>http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Modules/ScarVisualization"""
     parent.acknowledgementText = """ """
     self.parent = parent
 
-class ThresholdModelWidget:
+class ScarVisualizationWidget:
   def __init__(self, parent=None):
     if not parent:
       self.parent = slicer.qMRMLWidget()
@@ -112,7 +112,7 @@ class ThresholdModelWidget:
     self.thresholdFrame.setLayout(qt.QHBoxLayout())
     formLayout.addWidget(self.thresholdFrame)
     self.thresholdLabel = qt.QLabel("Threshold Range:", self.thresholdFrame)
-    self.thresholdLabel.setToolTip("Set the lower and upper thresholds for the model.")
+    self.thresholdLabel.setToolTip("Set the lower and upper intensity thresholds for the model.")
     self.thresholdFrame.layout().addWidget(self.thresholdLabel)
     self.threshold = ctk.ctkRangeWidget(self.thresholdFrame)
     self.threshold.spinBoxAlignment = 0xff # Put entries on top
@@ -138,7 +138,7 @@ class ThresholdModelWidget:
 
     if not (endoLabelImage):
       qt.QMessageBox.critical(slicer.util.mainWindow(),
-                              'Threshold Isosurface', 'Endo label image is required to generate a model.')
+                              'Scar Visualization', 'Endo label image is required to generate a model.')
     else:
       paramEndo['InputVolume'] = endoLabelImage.GetID()
       # Make a new model hierarchy node if needed
@@ -151,7 +151,7 @@ class ThresholdModelWidget:
           endoHierarchy = node
           break
         
-    endoHierarchy = slicer.vtkMRMLModelHierarchyNode()
+      endoHierarchy = slicer.vtkMRMLModelHierarchyNode()
         #  endoHierarchy = slicer.vtkMRMLModelNode()
       endoHierarchy.SetScene( slicer.mrmlScene )
       endoHierarchy.SetName( "Endo Model" )
@@ -163,7 +163,7 @@ class ThresholdModelWidget:
 
     if not (wallLabelImage):
       qt.QMessageBox.critical(slicer.util.mainWindow(),
-                              'Threshold Isosurface', 'Wall label image is required to generate a model.')
+                              'Scar Visualization', 'Wall label image is required to generate a model.')
     else:
       paramWall['InputVolume'] = wallLabelImage.GetID()
       # Make a new model hierarchy node if needed
@@ -176,7 +176,7 @@ class ThresholdModelWidget:
           wallHierarchy = node
           break
         
-    wallHierarchy = slicer.vtkMRMLModelHierarchyNode()
+      wallHierarchy = slicer.vtkMRMLModelHierarchyNode()
         #  wallHierarchy = slicer.vtkMRMLModelNode()
       wallHierarchy.SetScene( slicer.mrmlScene )
       wallHierarchy.SetName( "Wall Model" )
@@ -196,10 +196,10 @@ class ThresholdModelWidget:
     self.polyData = vtk.vtkPolyData()
     if not (wallModel):
       qt.QMessageBox.critical(slicer.util.mainWindow(),
-                             'Threshold Isosurface', 'Wall model is required to proceed.')
+                             'Scar Visualization', 'Wall model is required to proceed.')
     elif not (inputVol):
       qt.QMessageBox.critical(slicer.util.mainWindow(),
-                             'Threshold Isosurface', 'Input volume is required to proceed.')
+                             'Scar Visualization', 'Input volume is required to proceed.')
     else:
       self.outputModel = slicer.vtkMRMLModelNode()
       self.outputModel.SetName( "Output Model" )

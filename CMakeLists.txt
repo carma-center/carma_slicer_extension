@@ -173,6 +173,11 @@ add_subdirectory(CMRToolkitLASegmentationGraphCuts)
 add_subdirectory(CMRToolkitWizard)
 
 #-----------------------------------------------------------------------------
+# Add LA Segmentation Workflow module
+#-----------------------------------------------------------------------------
+add_subdirectory(LASegmentationWorkflow)
+
+#-----------------------------------------------------------------------------
  if(BUILD_TESTING)
    add_subdirectory(Testing)
  endif()
