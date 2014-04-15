@@ -77,6 +77,7 @@ typedef itk::Image< unsigned char,DATA_DMN > ImageType3;
 typedef itk::ImageFileReader<ImageType> ReaderType;
 typedef itk::ImageFileWriter<ImageType3> WriterType;
 typedef itk::AddImageFilter< ImageType, ImageType > AddImageFilterType;
+typedef vector<int> vec1i;
 typedef vector<float> vec1f;
 typedef itk::Image<unsigned char, 3> LabelImageType;
 
@@ -113,27 +114,35 @@ int main(int argc, char *argv[])
 	PARSE_ARGS;
 	
 	std::string Coorfile, stkglfile, stkidxfile, opmeshfile1, opmeshfile2;
-	//int DELTAS = atoi(argv[3]);
-	int DELTAS = deltaS;
+    int scale_factor = s_factor;
 	int MDL_OPTION = MdlOption; // model selection
-	// convert model option from integer to string
+    //	opmeshfile1 = epiMesh;
+    //	opmeshfile2 = endoMesh;
+
+    // convert model option from integer to string
 	std::string model_option_str;
 	std::stringstream model_option;
 	model_option << MDL_OPTION;
 	model_option_str = model_option.str();
-	vec1f RealCOM(3,0);
 	
-	ImageType::PointType center_of_LA;
-	ImageType::IndexType center_index;
-	
-	vec1f MeanCOM(3,0);
 	// Model's center of mass
-	MeanCOM[0] = 202.088;
+    vec1f MeanCOM(3,0.0f);
+    MeanCOM[0] = 202.088;
 	MeanCOM[1] = 205.65;
 	MeanCOM[2] = 57.4859;
-	
-	opmeshfile1 = epiMesh;
-	opmeshfile2 = endoMesh;
+
+//    int no_vertices = 0;
+//    if(MDL_OPTION == 1){
+//        no_vertices = 12027;
+//    }else if(MDL_OPTION == 2){
+//        no_vertices = 16087;
+//    }else if(MDL_OPTION == 3){
+//        no_vertices = 16913;
+//    }else if(MDL_OPTION == 14747){
+//        no_vertices = 14747;
+////        AKM: overriding!
+//        no_vertices = 16913;
+//    }
 	
 	// reading input image
 	ReaderType::Pointer reader = ReaderType::New();
@@ -142,13 +151,15 @@ int main(int argc, char *argv[])
 	ImageType::ConstPointer ipimage = reader->GetOutput();
 	
 	// Convert point lists to ITK points and convert RAS -> LPS
+    ImageType::PointType center_of_LA;
+    ImageType::IndexType center_index;
 	center_of_LA = convertStdVectorToITKPoint( centerOfLA );
-	
 	ipimage->TransformPhysicalPointToIndex( center_of_LA, center_index );
-	
-	RealCOM[0] = centerOfLA[0];
-	RealCOM[1] = centerOfLA[1];
-	RealCOM[2] = centerOfLA[2];
+
+    vec1f RealCOM(3,0.0f);
+    RealCOM[0] = center_index[0];
+    RealCOM[1] = center_index[1];
+    RealCOM[2] = center_index[2];
 	
 	// Get input image pixel spacing and origin
 	const ImageType::SpacingType& inputspacing = ipimage->GetSpacing();
@@ -198,8 +209,7 @@ int main(int argc, char *argv[])
 	textfile = triFile.str();
 	
 	std::ifstream inTextFile(textfile.c_str());
-	if(inTextFile.fail())
-	{
+    if(inTextFile.fail()){
 		std::cerr << "Error reading connectivity file: " <<  textfile.c_str() << std::endl;
 		return EXIT_FAILURE;
 	}
@@ -209,13 +219,12 @@ int main(int argc, char *argv[])
 	int sz = 0;
 	readmatrix(matrix, inTextFile, sz );
 	inTextFile.close();
-	std::cout<<"done!"<<std::endl;
-	sz--;
+    std::cout << "Number of triangle faces: " << sz << "\n";
 	
 	// Initialize connectivity matrix
 	int** nbor_mat = new int*[sz];
 	for(int  i=0; i < sz; i++)
-    nbor_mat[i] = new int[sec_dim];
+        nbor_mat[i] = new int[sec_dim];
 	connectmat(matrix, sz, nbor_mat);
 	
 	// Counting the number of points of a layer
@@ -223,8 +232,7 @@ int main(int argc, char *argv[])
 	PtsFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_0_0.pts";
 	std::string PtFileStr = PtsFile.str();
 	std::ifstream PtFile(PtFileStr.c_str()); // converting to C_std::string
-	if(PtFile.fail())
-	{
+    if(PtFile.fail()){
 		std::cerr << "Error reading point file: " << PtFileStr.c_str() << std::endl;
 		return EXIT_FAILURE;
 	}
@@ -248,8 +256,7 @@ int main(int argc, char *argv[])
 		Coorfile = ptsFile.str();
 		
 		std::ifstream inPtFile(Coorfile.c_str()); // converting to C_std::string
-		if(inPtFile.fail())
-		{
+        if(inPtFile.fail()){
 			std::cerr << "Error reading point file: " << Coorfile.c_str() << std::endl;
 			return EXIT_FAILURE;
 		}
@@ -274,8 +281,7 @@ int main(int argc, char *argv[])
 		Coorfile = ptsFile.str();
 		
 		std::ifstream inPtFile(Coorfile.c_str()); // converting to C_std::string
-		if(inPtFile.fail())
-		{
+        if(inPtFile.fail()){
 			std::cerr << "Error reading point file: " << Coorfile.c_str() << std::endl;
 			return EXIT_FAILURE;
 		}
@@ -298,7 +304,7 @@ int main(int argc, char *argv[])
 	
 	// put Model stick intensities into 2D matrix
 	std::stringstream OSMFile;
-	OSMFile << model_dir << "/POSTWALL0" << model_option_str << "RLS_1_3_twinstk2.dat";
+	OSMFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_1_3_twinstk.dat";
 	stkglfile = OSMFile.str();
 	
 	std::ifstream stkintFile1(stkglfile.c_str()); // converting to C_std::string
@@ -318,7 +324,7 @@ int main(int argc, char *argv[])
 	readstkmatrix(Mstkglmat1, stkintFile1, nop, numstkgl);
 	
 	std::stringstream ISMFile;
-	ISMFile << model_dir << "/POSTENDO0" << model_option_str << "RLS_0_0stk2.dat";
+	ISMFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_0_0stk.dat";
 	stkglfile = ISMFile.str();
 	//stkglfile = "/Users/salmabengali/data/1/POSTENDO01RLS_0_0stk2.dat";
 	
@@ -342,9 +348,9 @@ int main(int argc, char *argv[])
 	stkidxmat = new float**[layers];
 	std::cout<< "memory allocated for stick index matrix" << std::endl;
 	// put stick indices into 3D matrix
-	for (int m = 0; m < layers; m++){
+    for(int m = 0; m < layers; m++){
 		std::stringstream MIFile;
-		MIFile << model_dir << "/POSTENDO0" << model_option_str << "RLS_" << Cooridx[m] << "stkidx2.dat";;
+		MIFile << model_dir << "/POSTENDO0" << model_option_str << "RLS.txt_" << Cooridx[m] << "stkidx.dat";;
 		stkidxfile = MIFile.str();
 		//stkidxfile = "/Users/salmabengali/data/1/POSTENDO01RLS_stkidx2.dat";
 		//stkidxfile.insert(25 + 16,Cooridx[m]);
@@ -414,10 +420,7 @@ int main(int argc, char *argv[])
 				stk_index2[1] = (stkidxmat[mDS][n][3*p+1] - MeanCOM[1]) + Centroid[1];
 				stk_index2[2] = (stkidxmat[mDS][n][3*p+2] - MeanCOM[2]) + Centroid[2];;
 				Tstkglmat2[m][n][p] = interpolator(stk_index2,ResampledImage);
-				
-				//                 std::cout << Tstkglmat1[m][n][p] << " ";
 			}
-			//           std::cout << "\n";
 		}
 	}
 	std::cout << "data entered into test stick intensity matrix" << std::endl;
@@ -479,9 +482,7 @@ int main(int argc, char *argv[])
 					Wgtmat2[m][n] = Costmat2[m][n];
 				}
 			}
-			//            std::cout << Wgtmat1[m][n] << " ";
 		}
-    //          std::cout << "\n";
 	}
 	
 	// Building a graph
@@ -495,16 +496,10 @@ int main(int argc, char *argv[])
 		numedges = numedges + nbor_mat[i][1];
 	}
 	
-//  Vnet arcs
-//    // num_intraarcs = T-link arcs + vertical arcs + oblique vertical arcs + base graph arcs
-//    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers-DELTAS)*numedges + numedges;
-//    // num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
-//    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*nop + Mlayers*nop + numedges;
-//  VCEnet arcs
     // num_intraarcs = T-link arcs + vertical arcs + oblique vertical arcs + base graph arcs
-	int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers*(Mlayers+1)*0.5)*numedges + numedges;
-	// num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
-	int num_interarcs = (Mlayers-(DELTAU-DELTAL))*(DELTAU-DELTAL)*nop + Mlayers*nop + numedges;
+    int num_intraarcs = Mlayers*nop + (Mlayers-1)*nop + (Mlayers*(Mlayers+1)*0.5)*numedges + numedges;
+    // num_interarcs = V1->V2 arcs + V2-> V1 arcs + base graph arcs
+    int num_interarcs = (Mlayers-(DELTAU-DELTAL))*(DELTAU-DELTAL)*nop + Mlayers*nop + numedges;
 	
 	int num_arcs = numS*num_intraarcs + num_interarcs;
 	std::cout<< "Total number of arcs = " << num_arcs<< "\n";
@@ -519,8 +514,8 @@ int main(int argc, char *argv[])
 	std::cout << "nodes added. Now, adding arcs..." << std::endl;
 	//adding arcs
 	// arcs connecting source and sink (T-links)
-	for (int m = 0; m < Mlayers; m++){
-		for (int n = 0; n < nop; n++ ){
+    for(int m = 0; m < Mlayers; m++){
+        for(int n = 0; n < nop; n++ ){
 			float Tlnkcost1 = Wgtmat1[m][n];
 			if(Tlnkcost1 < 0){
 				g->add_tweights(m*nop + n, -Tlnkcost1, 0);
@@ -549,112 +544,89 @@ int main(int argc, char *argv[])
 			//    std::cout << m * nop  + n << "<->"<< (m+1) * nop + n << " ";
 		}
 	}
-	
-	//  Vnet connections
-//    std::cout<<"arcs connecting nodes in the base graph" << std::endl;
-//    int m = (Mlayers-1);
-//    for (int n = 0; n < nop; n++ ){
-//        for (int c = 2;c < sec_dim; c++){
-//            if (Nnbor_mat[n][c] != -1){
-//                g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-//                g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-//    //                    std::cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
-//            }
-//        }
-//    }
-
-//    std::cout << "arcs connecting node to the side-nodes in the layer below it" <<std::endl;
-//    for (int m = 0; m < (Mlayers-DELTAS); m++){
-//        for (int n = 0; n < nop; n++ ){
-//            for (int c = 2;c < sec_dim; c++){
-//                if (Nnbor_mat[n][c] != -1){
-//                    g->add_edge((m*nop)+Nnbor_mat[n][0],((m+DELTAS)*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-//                    g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+DELTAS)*nop) + Nnbor_mat[n][c], inf_vlu, 0);
-//    //                            std::cout << m*nop+Nnbor_mat[n][0] << "<->" << (m+1)*nop + Nnbor_mat[n][c] << " ";
-//                }
-//            }
-//        }
-//    }
-
-//    std::cout << "Inter-surface arcs" << "\n";
-//    for (int m = 0; m < Mlayers; m++){
-//        for (int n = 0; n < nop; n++ ){
-//            g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0);
-//            if (m < (Mlayers-(DELTAU-DELTAL))){
-//                g->add_edge(m*nop + n, num_nodes + ((m+(DELTAU-DELTAL))*nop)+n, inf_vlu, 0);
-//            }
-//            else if (m == (Mlayers-1))
-//                g->add_edge( m*nop + n, num_nodes + m*nop + n, inf_vlu, 0);
-//        }
-//    }
 
 //  VCEnet connections
     // Parameters
-	int DELTAO = 4;
-	int ALPHA1 = 500;
-	int ALPHA2 = 5;
-	int BETA = 2; // quadratic penalty
+    int alpha1 = scale_factor;
+    int alpha2 = 5;
+    int gamma = 2; // quadratic penalty
 	
-	//  N-links
-	cout << "Oblique arcs" << "\n";
-	int EdgeIntrvlIC = 10;
-	vec1f Delta_ij(EdgeIntrvlIC, 0);
-	for(int m = 0; m < EdgeIntrvlIC; m++){
-		if(m == 0)
-			Delta_ij[m] = DELTASL(m, ALPHA1, BETA);
-		else
-			Delta_ij[m] = DELTALB(m, ALPHA1, BETA);
-	}
-	for(int m = 0; m < (Mlayers-1); m++){
-		for(int n = 0; n < nop; n++){
-			for(int c = 2; c < sec_dim;c++){
-				if(Nnbor_mat[n][c] != -1){
-					for(int fij = 0; fij < EdgeIntrvlIC; fij++){
-						if((m+fij) <= (Mlayers-1)){
-							g->add_edge((m*nop)+Nnbor_mat[n][0],((m+fij)*nop) + Nnbor_mat[n][c],Delta_ij[fij],0);
-							g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+fij)*nop) + Nnbor_mat[n][c], Delta_ij[fij], 0);
-						}
-					}
-				}
-			}
-		}
-	}
-	cout<<"arcs connecting nodes in each base sub-graph" << endl;
-	int m = (Mlayers-1);
-	for (int n = 0; n < nop; n++ ){
-		for (int c = 2;c < sec_dim; c++){
-			if (Nnbor_mat[n][c] != -1){
-				g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
-				g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
-				//                    cout << m*nop+Nnbor_mat[n][0] << "<->" << m*nop + Nnbor_mat[n][c] << " ";
-			}
-		}
-	}
+    //  N-links
+    cout << "Oblique arcs" << "\n";
+    int EdgeIntrvlIC = 6;
+    vec1f Delta_ij(EdgeIntrvlIC, 0);
+    for(int m = 0; m < EdgeIntrvlIC; m++){
+        if(m == 0)
+            Delta_ij[m] = DELTASL(m, alpha1, gamma);
+        else
+            Delta_ij[m] = DELTALB(m, alpha1, gamma);
+    }
+    for(int m = 0; m < (Mlayers-1); m++){
+        for(int n = 0; n < nop; n++){
+            for(int c = 2; c < sec_dim;c++){
+                if(Nnbor_mat[n][c] != -1){
+                    for(int fij = 0; fij < EdgeIntrvlIC; fij++){
+                        if((m+fij) <= (Mlayers-1)){
+                            g->add_edge((m*nop)+Nnbor_mat[n][0],((m+fij)*nop) + Nnbor_mat[n][c],Delta_ij[fij],0);
+                            g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0],num_nodes + ((m+fij)*nop) + Nnbor_mat[n][c], Delta_ij[fij], 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    cout<<"arcs connecting nodes in each base sub-graph" << endl;
+    int m = (Mlayers-1);
+    for (int n = 0; n < nop; n++ ){
+        for (int c = 2;c < sec_dim; c++){
+            if (Nnbor_mat[n][c] != -1){
+                g->add_edge((m*nop)+Nnbor_mat[n][0],(m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);
+                g->add_edge(num_nodes + (m*nop)+Nnbor_mat[n][0], num_nodes + (m*nop) + Nnbor_mat[n][c], inf_vlu, inf_vlu);                
+            }
+        }
+    }
 	
-	//  Arcs between two sub-graphs
-	cout << "Inter-surface arcs" << "\n";
-	int EdgeIntrvlIS = DELTAU - DELTAL;
-	vec1f Delta_IS(EdgeIntrvlIS, 0);
-	for(int m = 0;  m < EdgeIntrvlIS; m++){
-		int q = abs((DELTAO-DELTAL) - m);
-		if(m == (DELTAO-DELTAL))
-			Delta_IS[m] = DELTASL(q, ALPHA2, BETA);
-		else if(m != (DELTAO-DELTAL))
-			Delta_IS[m] = DELTALB(q, ALPHA2, BETA);
-	}
-	for(int m = 0; m < Mlayers; m++){
-		for(int n = 0; n < nop; n++){
-			g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0); // opposite direction arcs
-			if(m < (Mlayers-1)){
-				for(int fij = 1; fij < (Mlayers - m); fij++){ // fij = 1 coz no edge connection exists at fij = 0
-					if((m+fij) <= (Mlayers-1))
-						g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, Delta_IS[fij], 0);
-				}
-			}else if(m == (Mlayers-1))
-				g->add_edge(m*nop + n, num_nodes + m*nop + n, inf_vlu, inf_vlu);
-		}
-	}
-	std::cout << "all arcs added" << std::endl;
+    //  Arcs between two sub-graphs
+    // Reading inter-surface distances
+    stringstream columnindex_stream;
+    columnindex_stream << model_dir << "/InterSurfaceMeshGap.txt";
+    string columnindexs_file = columnindex_stream.str();
+    ifstream inFile(columnindexs_file.c_str());
+    if(inFile.fail()){
+        cout << "Error reading column indices file: " << columnindexs_file.c_str() << "\n";
+        exit(1);
+    }
+    std::cout<<"Reading inter-surface gap text file..." << endl;
+    vec1i DELTAO;
+    int int_value;
+    while( inFile >> int_value ){
+        DELTAO.push_back(int_value);
+//            DELTAO.push_back(6);
+    }
+    std::cout << "Number of columns: " << DELTAO.size() << "\n";
+    inFile.close();
+
+    int deltaij0,deltaijxplus1;
+    for(int n = 0; n < nop; n++){
+        for(int m = 0; m < (Mlayers-1); m++){
+            g->add_edge(num_nodes + m*nop + n, m*nop + n, inf_vlu, 0); // opposite direction arcs
+//                for(int fij = 1; fij < (Mlayers - m); fij++){ // fij = 1 coz no edge connection exists at fij = 0
+            for(int fij = 1; fij < DELTAU; fij++){
+                if((m+fij) <= (Mlayers-1)){
+                    uint q = abs((DELTAO[n]-DELTAL) - fij);
+                    if(fij == (DELTAO[n]-DELTAL)){ // Inner-surface's m starts from DELTAL, so we subtract here to levelize
+                        deltaij0 = DELTASL(q, alpha2, gamma);
+                        g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, deltaij0, 0);
+                    }else{
+                        deltaijxplus1 = DELTALB(q, alpha2, gamma);
+                        g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, deltaijxplus1, 0);
+                    }
+                }
+            }
+        }
+        g->add_edge((Mlayers-1)*nop + n, num_nodes + (Mlayers-1)*nop + n, inf_vlu, inf_vlu);
+    }
+    std::cout << "all arcs added" << std::endl;
 	
 	// Finding minimum s-t cut
 	float flow = g -> maxflow();
@@ -704,34 +676,8 @@ int main(int argc, char *argv[])
 				Segbdrymat1[m][n] = Segrgnmat1[m-1][n] - Segrgnmat1[m][n];
 				Segbdrymat2[m][n] = Segrgnmat2[m-1][n] - Segrgnmat2[m][n];
 			}
-			
-			//     std::cout << Segbdrymat[m][n] << " ";
-		}
-    //      std::cout << "\n";
+        }
 	}
-	
-    //        //finding sum of correlation values
-    //        float sumcost1 = 0;
-    //        float sumcost2 = 0;
-
-    //        for (int m = 0; m < Mlayers; m++){
-    //        for (int n = 0; n < nop; n++){
-    //            if (Segbdrymat1[m][n] == -150){
-    //                if (Costmat1[m][n] < inf_vlu){ // To exclude divide-by-zero values
-    //                    sumcost1 = sumcost1+Costmat1[m][n];
-    //        //                     std::cout << sumcorr1 << " ";
-    //                }
-    //            }
-
-    //           if (Segbdrymat2[m][n] == -150){
-    //               if (Costmat2[m][n] < inf_vlu)
-    //                   sumcost2 = sumcost2+Costmat2[m][n];
-    //          }
-    //        }
-    //        }
-    //        float sumcost = sumcost1 + sumcost2;
-    //        costsum[ii] = sumcost/((float)(2*no_vertices)); // '2' coz of 2 surfaces
-    //        costdata << costsum[ii] << " ";
 
     // build segmentation mesh
 	float** segmesh1 = new float*[nop];
@@ -757,116 +703,108 @@ int main(int argc, char *argv[])
 }
 
 
-void readmatrix(std::vector< std::vector<int> >& matrix, std::ifstream& myfile, int& sz)
-{
+void readmatrix(std::vector< std::vector<int> >& matrix, std::ifstream& myfile, int& sz){
   sz = 0;
-  while(!myfile.eof()){
-    sz = sz+1;
-    std::string line;
-    getline(myfile,line);
-    std::stringstream lineStream(line);
-    std::vector<int> numbers;
-    int num;
-    char strDump[5]; // for ellipsoid case
-    // char strDump[1]; // for planar case
-
-    lineStream >> strDump; // neglect the initial std::string
-    lineStream >> num; // neglect
-    while(lineStream >> num)
-      numbers.push_back(num);
-
-    matrix.push_back(numbers);
-		//std::cerr << "Length of numbers: " << numbers.size() << std::endl;
+  std::string first_str;
+  while( myfile >> first_str ){
+      sz = sz+1;
+      string line;
+      getline(myfile,line);
+      stringstream lineStream(line);
+      vector<int> numbers;
+      int num;
+      lineStream >> num; // neglect
+      while(lineStream >> num)
+        numbers.push_back(num);
+      matrix.push_back(numbers);
   }
-	//std::cerr << "Size of matrix: " << matrix.size() << std::endl;
 }
 
 // Design of a connectivity matrix
-void connectmat(std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat)
-{
-	
-  for (int i = 0; i < sz; i++){
-    for (int j= 0; j < sec_dim; j++){
-      nbor_mat[i][j] = -1; // assign "-1" to the array initially
+void connectmat(std::vector< std::vector<int> >& matrix, int sz, int** nbor_mat){	
+    for(int i = 0; i < sz; i++){
+        for(int j= 0; j < sec_dim; j++){
+            nbor_mat[i][j] = -1; // assign "-1" to the array initially
+        }
     }
-  }
 	
-  for (int p = 0; p < sz; p++){
-    int pt = p+1; // for ellipsoid case
-    // int pt = p; // for planar case
-    nbor_mat[p][0] = pt;
-		
-    int q = 1; // neighbor count
-    for (int m = 0; m < sz; m++){
-			
-      // count # of neighbors and what are they?
-      // acquire its neighbors
-      if (matrix[m][0] == pt){
-        q=q+1;
-        nbor_mat[p][q] = matrix[m][1];
-        nbor_mat[p][q+1] = matrix[m][2];
-        q=q+1;
-			}
-			if (matrix[m][1] == pt){
-				q = q+1;
-				nbor_mat[p][q] = matrix[m][0];
-				nbor_mat[p][q+1] = matrix[m][2];
-				q=q+1;
-			}
-			if (matrix[m][2] == pt){
-				q=q+1;
-				nbor_mat[p][q] = matrix[m][0];
-				nbor_mat[p][q+1] = matrix[m][1];
-				q=q+1;
-			}
-		}
-		nbor_mat[p][1] = q-1; // decrement count by 1 that adds up while counting
+    for(int p = 0; p < sz; p++){
+        int pt = p+1; // for ellipsoid case
+        // int pt = p; // for planar case
+        nbor_mat[p][0] = pt;
+
+        int q = 1; // neighbor count
+        for(int m = 0; m < sz; m++){
+            // count # of neighbors and what are they?
+            // acquire its neighbors
+            if(matrix[m][0] == pt){
+                q=q+1;
+                nbor_mat[p][q] = matrix[m][1];
+                nbor_mat[p][q+1] = matrix[m][2];
+                q=q+1;
+            }
+            if(matrix[m][1] == pt){
+                q = q+1;
+                nbor_mat[p][q] = matrix[m][0];
+                nbor_mat[p][q+1] = matrix[m][2];
+                q=q+1;
+            }
+            if(matrix[m][2] == pt){
+                q=q+1;
+                nbor_mat[p][q] = matrix[m][0];
+                nbor_mat[p][q+1] = matrix[m][1];
+                q=q+1;
+            }
+        }
+        nbor_mat[p][1] = q-1; // decrement count by 1 that adds up while counting
 	}
 	
-  // This subroutine removes redundant neighbors and their count
-  for(int i = 0; i<sz; i++){
-    for (int j = 2; j<sec_dim; j++){ // leave first two columns for vertex and its neighbor count
-      int curr_ele = nbor_mat[i][j];
-      for (int k = j+1; k<sec_dim; k++){
-        if (nbor_mat[i][k] == curr_ele && nbor_mat[i][k] != -1){
-					nbor_mat[i][k] = -1;
-					nbor_mat[i][1] = nbor_mat[i][1]-1;
+    // This subroutine removes redundant neighbors and their count
+    for(int i = 0; i<sz; i++){
+        for(int j = 2; j<sec_dim; j++){ // leave first two columns for vertex and its neighbor count
+            int curr_ele = nbor_mat[i][j];
+            for(int k = j+1; k<sec_dim; k++){
+                if(nbor_mat[i][k] == curr_ele && nbor_mat[i][k] != -1){
+                    nbor_mat[i][k] = -1;
+                    nbor_mat[i][1] = nbor_mat[i][1]-1;
+                }
+            }
         }
-      }
-		}
-  }	
+    }
 }
 
 // Reading a point file to acquire number of points
 void read1Cmatrix(std::ifstream& myfile, int& num_pts){
-	while(!myfile.eof()){
-		std::string line;
-		getline(myfile,line);
-		if(line.empty())
-			break;
-		num_pts = num_pts + 1;
-	}
+    string chk_str;
+    while(myfile >> chk_str ){
+        std::string line;
+        getline(myfile,line);
+        if(line.empty())
+            break;
+        num_pts = num_pts + 1;
+    }
+    myfile.close();
 }
 
 // Reading point files
-void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM)
-{
+void readCmatrix(float** &Cmatrix, std::ifstream& myfile, int& nop, vec1f& avgCOM, vec1f& realCOM){
 	//std::cerr << "in readCmatrix" << std::endl;
 	int v_no = 0;
-	while(!myfile.eof()){
+    float first_float;
+    while( myfile >> first_float){
 		std::string line;
 		getline(myfile,line);
 		if(line.empty())
 			break;
 		
 		std::stringstream lineStream(line);
-		float numbers[3];
-		for(int i=0; i < 3; i++)
+        float numbers[2];
+        for(int i = 0; i < 2; i++)
 			lineStream >> numbers[i];
 		
-		Cmatrix[v_no][0] = (numbers[0]-avgCOM[0]) + realCOM[0];
-		Cmatrix[v_no][1] = (numbers[1]-avgCOM[1]) + realCOM[1];
-		Cmatrix[v_no][2] = (numbers[2]-avgCOM[2]) + realCOM[2];
+        Cmatrix[v_no][0] = (first_float-avgCOM[0]) + realCOM[0];
+        Cmatrix[v_no][1] = (numbers[0]-avgCOM[1]) + realCOM[1];
+        Cmatrix[v_no][2] = (numbers[1]-avgCOM[2]) + realCOM[2];
 		v_no++;
 		
 		nop = nop + 1;
@@ -887,10 +825,8 @@ void readstkmatrix(float** &stkglmatrix, std::ifstream &stkintFile, int& nop, in
 		
 		for(int j = 0; j < numel; j++){
 			stkglmatrix[n][j] = numbers[j];
-			//            std::cout << stkglmatrix[n][j] << " ";
 		}
 		delete[] numbers;
-		//        std::cout << "\n";
 	}
 }
 
@@ -901,15 +837,12 @@ void Mconnectmat(int** Nnbor_mat, int** nbor_mat, int& nop){
 			if (nbor_mat[r][c] != -1){
 				Nnbor_mat[r][c] = nbor_mat[r][c]-1;
 			}
-			else
-			{
+            else{
 				Nnbor_mat[r][c] = -1;
 			}
 			if (c == 1)
 				Nnbor_mat[r][c] = nbor_mat[r][c]; // reverting # of neighbors to the original value
-			//                std::cout<<Nnbor_mat[r][c]<< " ";
 		}
-		//        std::cout<<std::endl;
 	}
 }
 
@@ -1050,7 +983,7 @@ float DELTALB(int f, int alpha, int beta){ // LB == level below
 
 
 vtkPolyData* finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, vector<vector<int> > &matrix, 
-											 int &Mlayers, int &nop, int &sz, std::string opmeshfile, vec1f& input_origin){
+		       int &Mlayers, int &nop, int &sz, std::string opmeshfile, vec1f& input_origin){
 	//std::cout << "finalmesh function" << std::endl;
 	//ofstream outdata;
 	//outdata.open(opmeshfile.c_str());
