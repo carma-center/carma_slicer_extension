@@ -50,10 +50,10 @@ class LASegmentationWorkflowSelectDataStep( LASegmentationWorkflowStep ) :
   def loadData(self):
     vl = slicer.modules.volumes.logic()
     # Link to image on slicer wiki is found through 'copy link location' 
-    vol_mri = vl.AddArchetypeVolume('http://www.slicer.org/slicerWiki/images/b/b2/LGE-MRI.nrrd', 'LGE-MRI', 0)
+    vol_mri = vl.AddArchetypeVolume('http://www.na-mic.org/Wiki/images/8/8d/LAWorkflow_LGE.nrrd', 'LGE-MRI', 0)
     if vol_mri != None:
       Helper.SetVolume(vol_mri.GetID())
-    vol_mra = vl.AddArchetypeVolume('http://www.slicer.org/slicerWiki/images/b/b2/LGE-MRI.nrrd', 'LGE-MRI', 0)
+    vol_mra = vl.AddArchetypeVolume('http://www.na-mic.org/Wiki/images/3/3d/LAWorkflow_MRA.nrrd', 'MRA', 0)
     if vol_mra != None:
         Helper.SetVolume(vol_mra.GetID())
     

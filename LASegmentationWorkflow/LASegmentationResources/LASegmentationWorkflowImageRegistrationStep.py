@@ -21,6 +21,17 @@ class LASegmentationWorkflowImageRegistrationStep( LASegmentationWorkflowStep ) 
 
   def createUserInterface( self ):    
     self.__layout = self.__parent.createUserInterface()
+    #Create new volume selector
+    outputMraLabel = qt.QLabel("Registered MRA: ")
+    self.__outputSelector = slicer.qMRMLNodeComboBox()
+    self.__outputSelector.toolTip = "Create a new registered output volume"
+    self.__outputSelector.nodeTypes = ( ("vtkMRMLScalarVolumeNode"), "" )
+    self.__outputSelector.setMRMLScene( slicer.mrmlScene )
+    self.__outputSelector.addEnabled = True
+    self.__outputSelector.renameEnabled = True
+    self.__outputSelector.baseName = "Registered MRA"
+    self.__layout.addRow(outputMraLabel, self.__outputSelector)
+    
     # Register Volume button
     registerButton = qt.QPushButton("Register MRA to LGE-MRI")
     registerButton.toolTip = "Register MRA to LGE-MRI."
@@ -39,7 +50,7 @@ class LASegmentationWorkflowImageRegistrationStep( LASegmentationWorkflowStep ) 
     param['movingImage'] = inputMra.GetID()
     volumesLogic = slicer.modules.volumes.logic()
     global outputVolume
-    outputVolume = volumesLogic.CreateAndAddVolume( slicer.mrmlScene, inputMri, 'Registered_MRA' )
+    outputVolume = self.__outputSelector.currentNode()
     param['resampledImage'] = outputVolume.GetID()
         
     param['registration'] = "PipelineRigid"
@@ -49,7 +60,10 @@ class LASegmentationWorkflowImageRegistrationStep( LASegmentationWorkflowStep ) 
     param['rigidMaxIterations'] = 100
     param['rigidSamplingRatio'] = 0.05
     
-    slicer.cli.run( slicer.modules.expertautomatedregistration, None, param, wait_for_completion=True )
+    if outputVolume != None:
+      slicer.cli.run( slicer.modules.expertautomatedregistration, None, param, wait_for_completion=True )
+    else:
+      self.__parent.validationFailed(desiredBranchId, 'Image Registration','Please create a new output volume to proceed.')
     
   def validate( self, desiredBranchId ):
     self.__parent.validate( desiredBranchId )
