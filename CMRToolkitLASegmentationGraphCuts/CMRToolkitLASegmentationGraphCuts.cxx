@@ -613,7 +613,7 @@ int main(int argc, char *argv[])
 //                for(int fij = 1; fij < (Mlayers - m); fij++){ // fij = 1 coz no edge connection exists at fij = 0
             for(int fij = 1; fij < DELTAU; fij++){
                 if((m+fij) <= (Mlayers-1)){
-                    uint q = abs((DELTAO[n]-DELTAL) - fij);
+                    unsigned int q = abs((DELTAO[n]-DELTAL) - fij);
                     if(fij == (DELTAO[n]-DELTAL)){ // Inner-surface's m starts from DELTAL, so we subtract here to levelize
                         deltaij0 = DELTASL(q, alpha2, gamma);
                         g->add_edge(m*nop + n, num_nodes + ((m+fij)*nop)+n, deltaij0, 0);
@@ -1031,7 +1031,7 @@ vtkPolyData* finalmesh(float*** &Coormat, int** &Segbdrymat, float** &segmesh, v
 	
 	// SB: Calculate the mesh normals
 	vtkSmartPointer<vtkPolyDataNormals> meshNormals = vtkSmartPointer<vtkPolyDataNormals>::New();
-	meshNormals->SetInput( meshPolyData );
+	meshNormals->SetInputData( meshPolyData );
 	meshNormals->FlipNormalsOn();
 	//meshNormals->SetFeatureAngle( 60.0 );
 	//meshNormals->ComputeCellNormalsOn();
@@ -1087,7 +1087,7 @@ void modelToLabelMap( ImageType::ConstPointer image, vtkPolyData* polyDataFile, 
   // do it
   vtkSmartPointer<vtkPolyDataPointSampler> sampler = vtkSmartPointer<vtkPolyDataPointSampler>::New();
 	
-  sampler->SetInput( polyDataFile );
+  sampler->SetInputData( polyDataFile );
   sampler->SetDistance( 0.5 );
   sampler->GenerateEdgePointsOn();
   sampler->GenerateInteriorPointsOn();

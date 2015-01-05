@@ -1,6 +1,6 @@
 from __main__ import vtk, qt, ctk, slicer
 #
-# Threshold Model
+# Scar Visualization
 #
 
 class ScarVisualization:
