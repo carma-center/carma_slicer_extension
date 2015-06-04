@@ -55,8 +55,7 @@ class ScarVisualizationWidget:
     self.endoLabelSelector = qt.QLabel("Endo Label Map: ", self.endoLabelFrame)
     self.endoLabelFrame.layout().addWidget(self.endoLabelSelector)
     self.endoLabelSelector = slicer.qMRMLNodeComboBox(self.endoLabelFrame)
-    self.endoLabelSelector.nodeTypes = ( ("vtkMRMLScalarVolumeNode"), "" )
-    self.endoLabelSelector.addAttribute( "vtkMRMLScalarVolumeNode", "LabelMap", 1 )
+    self.endoLabelSelector.nodeTypes = ( ("vtkMRMLLabelMapVolumeNode"), "" )
     self.endoLabelSelector.addEnabled = False
     self.endoLabelSelector.removeEnabled = True
     self.endoLabelSelector.renameEnabled = True
@@ -70,8 +69,7 @@ class ScarVisualizationWidget:
     self.wallLabelSelector = qt.QLabel("Wall Label Map: ", self.wallLabelFrame)
     self.wallLabelFrame.layout().addWidget(self.wallLabelSelector)
     self.wallLabelSelector = slicer.qMRMLNodeComboBox(self.wallLabelFrame)
-    self.wallLabelSelector.nodeTypes = ( ("vtkMRMLScalarVolumeNode"), "" )
-    self.wallLabelSelector.addAttribute( "vtkMRMLScalarVolumeNode", "LabelMap", 1 )
+    self.wallLabelSelector.nodeTypes = ( ("vtkMRMLLabelMapVolumeNode"), "" )
     self.wallLabelSelector.addEnabled = False
     self.wallLabelSelector.removeEnabled = True
     self.wallLabelSelector.renameEnabled = True
