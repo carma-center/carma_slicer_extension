@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.7)
 #-----------------------------------------------------------------------------
 set(EXTENSION_NAME "Cardiac_MRI_Toolkit")
 set(EXTENSION_HOMEPAGE "http://capulet.med.utah.edu/namic/cmrslicer/")
-set(EXTENSION_CATEGORY "Cardiac MRI toolkit")
+set(EXTENSION_CATEGORY "Cardiac")
 set(EXTENSION_STATUS "Beta")
 set(EXTENSION_ICONURL "http://capulet.med.utah.edu/namic/images/CMRTK-logo.png")
 set(EXTENSION_CONTRIBUTORS "Alan Morris (CARMA), Salma Bengali (CARMA), Josh Cates (CARMA), Rob MacLeod (CARMA), Eugene Kholmovski (CARMA)")
